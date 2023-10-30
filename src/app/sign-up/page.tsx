@@ -3,7 +3,7 @@
 import Header from "@/components/header";
 import { signIn, signOut, useSession } from "next-auth/react";
 
-function signup() {
+function Signup() {
   const session = useSession();
 
   return (
@@ -99,4 +99,4 @@ function signup() {
   );
 }
 
-export default signup;
+export default Signup;
