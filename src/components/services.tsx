@@ -1,7 +1,7 @@
 function services() {
   return (
     <div id="services">
-      <section className="pb-12 pt-20 text-white lg:pb-[90px] lg:pt-[120px]">
+      <section className="pb-12 pt-20  lg:pb-[90px] lg:pt-[120px]">
         <div className="">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4">
@@ -25,6 +25,7 @@ function services() {
               details="We offer a large amount of courses to learn different types of money making methods, to give you an edge."
               icon={
                 <svg
+                  className="dark:invert"
                   width="32"
                   height="32"
                   viewBox="0 0 32 32"
@@ -43,6 +44,7 @@ function services() {
               details="We enjoy giving you notifications when a fresh new money making trend is available to you."
               icon={
                 <svg
+                  className="dark:invert"
                   width="39"
                   height="22"
                   viewBox="0 0 39 22"
@@ -68,6 +70,7 @@ function services() {
               details="We offer a private forum to all our members, where they can discuss on how to make bank and share information. "
               icon={
                 <svg
+                  className="dark:invert"
                   width="35"
                   height="35"
                   viewBox="0 0 35 35"
@@ -98,6 +101,7 @@ function services() {
               details="If you become a Legend member, you will be exclusively able to ask questions to our experienced staff."
               icon={
                 <svg
+                  className="dark:invert"
                   width="35"
                   height="35"
                   viewBox="0 0 35 35"
@@ -128,6 +132,7 @@ function services() {
               details="Got a new idea for the platform? Email us, and we might add it to our list at info@coursegod.com."
               icon={
                 <svg
+                  className="dark:invert"
                   width="35"
                   height="35"
                   viewBox="0 0 35 35"
@@ -146,6 +151,7 @@ function services() {
               details="Got a new idea for the platform? Email us, and we might add it to our list at info@coursegod.org."
               icon={
                 <svg
+                  className="dark:invert"
                   width="35"
                   height="35"
                   viewBox="0 0 35 35"
@@ -178,7 +184,7 @@ const ServiceCard = ({
 }) => {
   return (
     <>
-      <div className="w-full px-1 text-white md:w-1/2 md:px-4 lg:w-1/3">
+      <div className="w-full px-1  md:w-1/2 md:px-4 lg:w-1/3">
         <div className="mb-8 rounded-[20px] p-10 shadow-md hover:shadow-lg md:px-7 xl:px-10">
           <div
             className={`bg-primary mb-8 flex h-[70px] w-[70px] items-center justify-center rounded-2xl p-3`}

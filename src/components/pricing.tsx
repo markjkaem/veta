@@ -3,7 +3,7 @@ import Link from "next/link";
 function pricing() {
   return (
     <div id="pricing" className="container-purple container-center container">
-      <h2 className="mt-6 text-5xl font-bold text-center text-white">
+      <h2 className="mt-6 text-5xl font-bold text-center ">
         Sign Up now,
         <br />
         <span className="text-2xl font-normal">and become a whale today.</span>

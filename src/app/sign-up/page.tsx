@@ -1,20 +1,29 @@
 "use client";
 
 import Header from "@/components/header";
+import { Button } from "@/components/ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/src/app/components/ui/card";
 
 function Signup() {
   const session = useSession();
 
   return (
     <>
-      <section className="bg-[#000000]">
+      <section className="">
         <Header />
         <div className="  h-screen flex flex-col items-center justify-center px-6 py-8 lg:py-0">
-          <div className=" rounded-lg bg-slate-900 shadow  sm:max-w-md md:mt-0 xl:p-0">
+          <div className=" rounded-lg shadow  sm:max-w-md md:mt-0 xl:p-0">
             <div className="flex flex-col items-center justify-center space-y-4 p-6 sm:p-8 md:space-y-6">
               <div className="flex flex-col">
-                <span className="text-xl font-bold leading-tight tracking-tight  text-white md:text-2xl">
+                <span className="text-xl font-bold leading-tight tracking-tight md:text-2xl">
                   Sign in to your account
                 </span>
               </div>
@@ -80,17 +89,17 @@ function Signup() {
                   Sign in with Spotify
                 </button>
               </div>
-              {session.data?.user?.email && (
+              {/* {session.data?.user?.email && (
                 <div>
                   <p>
                     Signed in as{" "}
                     {session.data?.user?.email && session.data?.user.email}
                   </p>
-                  <button onClick={() => signOut()}>Sign out by link</button>
+                  <Button onClick={() => signOut()}>Sign out</Button>
                 </div>
               )}
 
-              {!session.data?.user?.email && <p>Not signed in</p>}
+              {!session.data?.user?.email && <p>Not signed in</p>} */}
             </div>
           </div>
         </div>
