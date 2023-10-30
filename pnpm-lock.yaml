@@ -9,6 +9,7 @@ specifiers:
   eslint-config-next: 14.0.0
   next: 14.0.0
   postcss: ^8
+  postcss-nesting: ^12.0.1
   react: ^18
   react-dom: ^18
   tailwindcss: ^3
@@ -27,6 +28,7 @@ devDependencies:
   eslint: 8.52.0
   eslint-config-next: 14.0.0_i3vkbg2fztj7jno7sh3heeojya
   postcss: 8.4.31
+  postcss-nesting: 12.0.1_postcss@8.4.31
   tailwindcss: 3.3.5
   typescript: 5.2.2
 
@@ -47,6 +49,15 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.0
+    dev: true
+
+  /@csstools/selector-specificity/3.0.0_c3vcbepomgmxc74cgtawpgpkyi:
+    resolution: {integrity: sha512-hBI9tfBtuPIi885ZsZ32IMEU/5nlZH/KOVYJCOh7gyMxaVLGmLedYqFN6Ui1LXkI8JlC8IsuC0rF0btcRZKd5g==}
+    engines: {node: ^14 || ^16 || >=18}
+    peerDependencies:
+      postcss-selector-parser: ^6.0.13
+    dependencies:
+      postcss-selector-parser: 6.0.13
     dev: true
 
   /@eslint-community/eslint-utils/4.4.0_eslint@8.52.0:
@@ -2015,6 +2026,17 @@ packages:
     peerDependencies:
       postcss: ^8.2.14
     dependencies:
+      postcss: 8.4.31
+      postcss-selector-parser: 6.0.13
+    dev: true
+
+  /postcss-nesting/12.0.1_postcss@8.4.31:
+    resolution: {integrity: sha512-6LCqCWP9pqwXw/njMvNK0hGY44Fxc4B2EsGbn6xDcxbNRzP8GYoxT7yabVVMLrX3quqOJ9hg2jYMsnkedOf8pA==}
+    engines: {node: ^14 || ^16 || >=18}
+    peerDependencies:
+      postcss: ^8.4
+    dependencies:
+      '@csstools/selector-specificity': 3.0.0_c3vcbepomgmxc74cgtawpgpkyi
       postcss: 8.4.31
       postcss-selector-parser: 6.0.13
     dev: true
