@@ -89,7 +89,7 @@ function Signup() {
                   Sign in with Spotify
                 </button>
               </div>
-              {/* {session.data?.user?.email && (
+              {session.data?.user?.email && (
                 <div>
                   <p>
                     Signed in as{" "}
@@ -99,7 +99,7 @@ function Signup() {
                 </div>
               )}
 
-              {!session.data?.user?.email && <p>Not signed in</p>} */}
+              {!session.data?.user?.email && <p>Not signed in</p>}
             </div>
           </div>
         </div>

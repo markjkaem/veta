@@ -29,7 +29,7 @@ function hero() {
         <div className="flex gap-6 mt-4">
           <Link
             className="bg-pink-400 text-white rounded-sm py-3 px-5 no-underline hover:bg-pink-500 transition"
-            href="/sign-up"
+            href="/sign-in"
           >
             Sign Up
           </Link>
