@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import { ToggleMode } from "./togglemode";
+import UserHeader from "./user-header";
 
 function header() {
   return (
@@ -20,7 +21,8 @@ function header() {
           />
         </Link>
       </div>
-      <div className="absolute gap-2 top-10 md:top-8 md:right-8 lg:right-16 flex items-baseline right-2 decoration-none ml-4">
+      <div className="absolute gap-2 top-10 md:top-8 md:right-8 lg:right-16 flex items-center right-2 decoration-none ml-4">
+        <UserHeader />
         <ToggleMode />
       </div>
     </div>

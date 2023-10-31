@@ -3,14 +3,6 @@
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/src/app/components/ui/card";
 
 function Signup() {
   const session = useSession();
@@ -89,17 +81,6 @@ function Signup() {
                   Sign in with Spotify
                 </button>
               </div>
-              {session.data?.user?.email && (
-                <div>
-                  <p>
-                    Signed in as{" "}
-                    {session.data?.user?.email && session.data?.user.email}
-                  </p>
-                  <Button onClick={() => signOut()}>Sign out</Button>
-                </div>
-              )}
-
-              {!session.data?.user?.email && <p>Not signed in</p>}
             </div>
           </div>
         </div>
