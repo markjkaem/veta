@@ -14,10 +14,13 @@ export default async function middleware(req: NextRequest) {
     req,
     secret: process.env.NEXTAUTH_SECRET,
   });
-  const isProtected = path.includes('/database');
+  const isProtected = path.includes('/dashboard');
 
   if (!session && isProtected) {
     return NextResponse.redirect(new URL('/sign-in', req.url));
+  }
+  else if (session && path.includes('/sign-in')) {
+    return NextResponse.redirect(new URL('/dashboard', req.url));
   }
   return NextResponse.next();
 }
