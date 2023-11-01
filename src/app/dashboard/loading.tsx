@@ -14,10 +14,6 @@ export default function Loading() {
             width={50}
             height={50}
           />
-          <Skeleton className=" w-[500px] h-[20px]" />
-          <Skeleton className="w-[500px] h-[15px]" />
-          <Skeleton className="w-[500px] h-[20px]" />
-          <Skeleton className="w-[500px] h-[15px]" />
         </div>
       </div>
     </>
