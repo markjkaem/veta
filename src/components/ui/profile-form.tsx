@@ -21,8 +21,10 @@ import db from "../../../drizzle/db";
 import { eq } from "drizzle-orm";
 import { profiles } from "../../../drizzle/schema";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { PutBlobResult, put } from "@vercel/blob";
 
 const profileFormSchema = z.object({
   alias: z
@@ -46,11 +48,13 @@ interface ProfileData {
   alias: string | null;
   url: string | null;
   bio: string | null;
+  image: string | null;
 }
 
 export function ProfileForm(props: { profileData: ProfileData[] }) {
   const router = useRouter();
-
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  const [blob, setBlob] = useState<PutBlobResult | null>(null);
   const session = useSession();
   const [categories, setCategories] = useState([
     { name: "Lifestyle", selected: false },
@@ -87,7 +91,23 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
     mode: "onChange",
   });
 
+  const createBlobFile = async (file: File) => {
+    const response = await fetch(`/api/avatar/upload?filename=${file.name}`, {
+      method: "POST",
+      body: file,
+    });
+
+    const newBlob = (await response.json()) as PutBlobResult;
+    return newBlob;
+  };
+
   async function onSubmit(data: ProfileFormValues) {
+    const profilerows = await db
+      .select()
+      .from(profiles)
+      .where(eq(profiles.email, session.data?.user?.email as string));
+    const isProfile = profilerows[0];
+
     const createCategoryString = (): string => {
       const selectedCategories = categories.filter((cat) => cat.selected);
       const makeString = selectedCategories.map((cat) => cat.name);
@@ -96,37 +116,68 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
     };
     const categoryString = createCategoryString();
 
-    const profilerows = await db
-      .select()
-      .from(profiles)
-      .where(eq(profiles.email, session.data?.user?.email as string));
-
-    if (!profilerows[0]) {
-      await db.insert(profiles).values({
-        alias: data.alias,
-        bio: data.bio,
-        url: data.url,
-        email: session.data?.user?.email as string,
-        categories: categoryString,
-      });
-      toast({
-        title: "Your profile was succesfully updated.",
-      });
-      router.push("/dashboard/settings/profile");
-    } else {
-      await db
-        .update(profiles)
-        .set({
+    // image blob upload
+    if (!inputFileRef.current?.files) {
+      // executed
+      if (!isProfile) {
+        await db.insert(profiles).values({
           alias: data.alias,
           bio: data.bio,
           url: data.url,
+          email: session.data?.user?.email as string,
           categories: categoryString,
-        })
-        .where(eq(profiles.email, session.data?.user?.email as string));
-      toast({
-        title: "Your profile was succesfully updated.",
-      });
-      router.push("/dashboard/settings/profile");
+        });
+        toast({
+          title: "Your profile was succesfully updated.",
+        });
+        router.push("/dashboard/settings/profile");
+      } else {
+        await db
+          .update(profiles)
+          .set({
+            alias: data.alias,
+            bio: data.bio,
+            url: data.url,
+            categories: categoryString,
+          })
+          .where(eq(profiles.email, session.data?.user?.email as string));
+        toast({
+          title: "Your profile was succesfully updated.",
+        });
+        router.push("/dashboard/settings/profile");
+      }
+    } else {
+      const file = inputFileRef.current.files[0];
+      const newBlob = await createBlobFile(file);
+      if (!isProfile) {
+        await db.insert(profiles).values({
+          alias: data.alias,
+          bio: data.bio,
+          url: data.url,
+          image: newBlob.url,
+          email: session.data?.user?.email as string,
+          categories: categoryString,
+        });
+        toast({
+          title: "Your profile was succesfully updated.",
+        });
+        router.push("/dashboard/settings/profile");
+      } else {
+        await db
+          .update(profiles)
+          .set({
+            alias: data.alias,
+            bio: data.bio,
+            url: data.url,
+            image: newBlob.url,
+            categories: categoryString,
+          })
+          .where(eq(profiles.email, session.data?.user?.email as string));
+        toast({
+          title: "Your profile was succesfully updated.",
+        });
+        router.push("/dashboard/settings/profile");
+      }
     }
   }
 
@@ -135,6 +186,13 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
       <div className="space-y-2 mt-4 md:w-8/12 w-11/12">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <img
+              className="h-40 w-40 object-cover"
+              src={profileData[0]?.image!}
+              alt=""
+            />
+
+            <input name="file" ref={inputFileRef} type="file" />
             <FormField
               control={form.control}
               name="alias"

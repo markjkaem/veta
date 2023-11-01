@@ -16,6 +16,7 @@ export const profiles = pgTable("profile", {
   email: text("email"),
   bio: text("bio"),
   categories: varchar("categories", { length: 256 }),
+  image: text("image"),
 
 })
 
@@ -52,6 +53,8 @@ export const users = pgTable("user", {
   email: text("email").notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
+  role: text("role", {enum: ["influencer", "company"]}),
+  stripe_id: text("stripe_id"),
 })
 
 export const accounts = pgTable(

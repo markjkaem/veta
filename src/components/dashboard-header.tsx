@@ -3,8 +3,22 @@ import TeamSwitcher from "./ui/team-switcher";
 import { MainNav } from "./ui/main-nav";
 import { Search } from "./ui/search";
 import { UserNav } from "./ui/user-nav";
+import db from "../../drizzle/db";
+import { users } from "../../drizzle/schema";
+import { eq } from "drizzle-orm";
+import { getServerSession } from "next-auth";
 
-function DashboardHeader() {
+const getRole = async () => {
+  const session = await getServerSession();
+  const role = await db
+    .select({ role: users.role })
+    .from(users)
+    .where(eq(users.email, session?.user?.email as string));
+  return role[0].role;
+};
+async function DashboardHeader() {
+  const role = await getRole();
+
   return (
     <div>
       {" "}
@@ -14,7 +28,7 @@ function DashboardHeader() {
           <MainNav className="mx-6" />
           <div className="ml-auto flex items-center space-x-4">
             <Search />
-            <UserNav />
+            <UserNav role={role} />
           </div>
         </div>
       </div>

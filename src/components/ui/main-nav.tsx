@@ -18,7 +18,7 @@ export function MainNav({
         Overview
       </Link>
       <Link
-        href="/examples/dashboard"
+        href="/dashboard/marketplace"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Marketplace

@@ -18,13 +18,34 @@ import { Search } from "@/components/ui/search";
 import TeamSwitcher from "@/components/ui/team-switcher";
 import { UserNav } from "@/components/ui/user-nav";
 import DashboardHeader from "@/components/dashboard-header";
+import Stripe from "stripe";
+import { getServerSession } from "next-auth";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Dashboard",
   description: "Example dashboard app built using the components.",
 };
 
-export default function DashboardPage() {
+const getBalance = async () => {
+  const session = await getServerSession();
+  const stripe = new Stripe(
+    "***REMOVED***",
+    {
+      apiVersion: "2023-10-16",
+    }
+  );
+  const response = (
+    await stripe.customers.search({
+      query: `email:\"${session?.user?.email}\"`,
+    })
+  ).data[0].balance;
+  return response;
+};
+
+export default async function DashboardPage() {
+  const balance = await getBalance();
+
   return (
     <>
       <DashboardHeader />
@@ -32,8 +53,10 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
           <div className="flex items-center space-x-2">
-            <DatePickerWithRange />
-            <Button>Download</Button>
+            {/* <DatePickerWithRange /> */}
+            <Link href={"/marketplace"}>
+              <Button>Find matches</Button>
+            </Link>
           </div>
         </div>
         <Tabs defaultValue="overview" className="space-y-4">
@@ -54,7 +77,7 @@ export default function DashboardPage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Total Revenue
+                    My balance
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -70,16 +93,18 @@ export default function DashboardPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$45,231.89</div>
+                  <div className="text-2xl font-bold">
+                    ${balance.toFixed(2)}
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    +20.1% from last month
+                    My stripe balance
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Subscriptions
+                    Connections
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -97,15 +122,17 @@ export default function DashboardPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+2350</div>
+                  <div className="text-2xl font-bold">+10</div>
                   <p className="text-xs text-muted-foreground">
-                    +180.1% from last month
+                    My connections
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Sales</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Campaigns
+                  </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -121,16 +148,14 @@ export default function DashboardPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+12,234</div>
-                  <p className="text-xs text-muted-foreground">
-                    +19% from last month
-                  </p>
+                  <div className="text-2xl font-bold">+2</div>
+                  <p className="text-xs text-muted-foreground">My campaigns</p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Active Now
+                    Active campaigns
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -146,9 +171,9 @@ export default function DashboardPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+573</div>
+                  <div className="text-2xl font-bold">+1</div>
                   <p className="text-xs text-muted-foreground">
-                    +201 since last hour
+                    My active campaigns
                   </p>
                 </CardContent>
               </Card>
