@@ -18,6 +18,8 @@ import Link from "next/link";
 import db from "../../../../../../drizzle/db";
 import { profiles, users } from "../../../../../../drizzle/schema";
 import { and, desc, eq } from "drizzle-orm";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Music App",
@@ -43,7 +45,13 @@ export default async function MusicPage({
 }: {
   params: { slug: string };
 }) {
+  const session = await getServerSession();
+
   const influencers = await getInfluencer(params.slug);
+
+  if (influencers.email === (session?.user?.email as string)) {
+    redirect("/dashboard/settings/profile");
+  }
   return (
     <>
       <DashboardHeader />

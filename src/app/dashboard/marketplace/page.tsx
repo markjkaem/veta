@@ -64,7 +64,7 @@ export default async function MusicPage() {
                     >
                       <div className="mt-6 space-y-1">
                         <h2 className="text-2xl font-semibold tracking-tight">
-                          Match with influencers
+                          VETA influencers
                         </h2>
                         <p className="text-sm text-muted-foreground">
                           Find your perfect match. Updated daily.
