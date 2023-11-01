@@ -4,8 +4,47 @@ import {
   text,
   primaryKey,
   integer,
+  serial,
+  varchar,
 } from "drizzle-orm/pg-core"
 import { AdapterAccount } from "next-auth/adapters"
+
+export const profiles = pgTable("profile", {
+  id: serial("id").primaryKey().unique(),
+  alias: text("alias"),
+  url: text("url"),
+  email: text("email"),
+  bio: text("bio"),
+  categories: varchar("categories", { length: 256 }),
+
+})
+
+export const settingsaccounts = pgTable("settingsaccount", {
+  id: serial("id").primaryKey().unique(),
+  firstname: text("firstname"),
+  lastname: text("lastname"),
+  gender: text("gender"),
+  phone: text("phone"),
+  vatnumber: text("vatnumber"),
+  companyid: text("companyid"),
+  email: text("email")
+})
+
+export const settingsaddress = pgTable("settingsaddress", {
+  id: serial("id").primaryKey().unique(),
+  companyname: text("companyname"),
+  street: text("street"),
+  zipcode: text("phone"),
+  city: text("city"),
+  country: text("country"),
+  email: text("email")
+})
+
+export const phyllo = pgTable("phyllo", {
+  id: serial("id").primaryKey().unique(),
+  phylloid: text("phylloid"),
+  email: text("email").notNull(),
+})
 
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
@@ -56,4 +95,5 @@ export const verificationTokens = pgTable(
     compoundKey: primaryKey(vt.identifier, vt.token)
   })
 )
+
 

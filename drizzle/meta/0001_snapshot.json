@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "da1339d4-5d37-4c79-89ae-a072b1975da6",
-  "prevId": "59852cf9-306b-4f83-8907-e31c81db955a",
+  "id": "bbc2a2fe-d899-4bfa-976f-b28c47c454c0",
+  "prevId": "752e6011-3a1a-4a59-b12e-1778f800662f",
   "tables": {
     "account": {
       "name": "account",
@@ -102,6 +102,46 @@
       },
       "uniqueConstraints": {}
     },
+    "profile": {
+      "name": "profile",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "alias": {
+          "name": "alias",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bio": {
+          "name": "bio",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "session": {
       "name": "session",
       "schema": "",
@@ -174,12 +214,6 @@
         },
         "image": {
           "name": "image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "stripe_id": {
-          "name": "stripe_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false
