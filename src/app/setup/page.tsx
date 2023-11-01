@@ -32,14 +32,11 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import db from "../../../drizzle/db";
 import { eq } from "drizzle-orm";
-import { settingsaccounts, users } from "../../../drizzle/schema";
+import { profiles, settingsaccounts, users } from "../../../drizzle/schema";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
-const phoneRegex = new RegExp(
-  /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
-);
+import { profile } from "console";
 
 const accountFormSchema = z.object({
   type: z.string(),
@@ -79,6 +76,25 @@ export default function AccountForm() {
         role: data?.type as any,
       })
       .where(eq(users.email, session.data?.user?.email as string));
+
+    const isProfile = await db
+      .select()
+      .from(profiles)
+      .where(eq(profiles.email, session.data?.user?.email as string));
+
+    if (!isProfile[0]) {
+      await db.insert(profiles).values({
+        role: data?.type as any,
+        email: session.data?.user?.email as string,
+      });
+    } else {
+      await db
+        .update(profiles)
+        .set({
+          role: data?.type as any,
+        })
+        .where(eq(profiles.email, session.data?.user?.email as string));
+    }
 
     //  Create stripe account
     const response = await db

@@ -7,7 +7,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { AlbumArtwork } from "@/components/ui/album-artwork";
+import { InfluencerArtwork } from "@/components/ui/album-artwork";
 import { Menu } from "@/components/ui/menu";
 import { PodcastEmptyPlaceholder } from "@/components/ui/podcast-empty-placeholder";
 import { Sidebar } from "@/components/ui/sidebar";
@@ -15,19 +15,33 @@ import { listenNowAlbums, madeForYouAlbums } from "@/helpers/albums";
 import { playlists } from "@/helpers/playlists";
 import DashboardHeader from "@/components/dashboard-header";
 import Link from "next/link";
+import db from "../../../../drizzle/db";
+import { profiles, users } from "../../../../drizzle/schema";
+import { desc, eq } from "drizzle-orm";
+import { getServerSession } from "next-auth";
 
 export const metadata: Metadata = {
   title: "Music App",
   description: "Example music app using the components.",
 };
 
-export default function MusicPage() {
+const getInfluencers = async () => {
+  const response = await db
+    .select()
+    .from(profiles)
+    .where(eq(profiles.role, "influencer"));
+  const filteredResponse = response.filter((item) => item?.alias?.length! > 2);
+  return filteredResponse;
+};
+
+export default async function MusicPage() {
+  const influencers = await getInfluencers();
   return (
     <>
       <DashboardHeader />
 
       <div className="hidden md:block">
-        <Menu />
+        {/* <Menu /> */}
         <div className="border-t">
           <div className="bg-background">
             <div className="grid lg:grid-cols-5">
@@ -38,68 +52,32 @@ export default function MusicPage() {
                     <div className="space-between flex items-center">
                       <TabsList>
                         <TabsTrigger value="music" className="relative">
-                          Music
+                          Marketplace
                         </TabsTrigger>
-                        <TabsTrigger value="podcasts">Podcasts</TabsTrigger>
-                        <TabsTrigger value="live" disabled>
-                          Live
-                        </TabsTrigger>
+                        <TabsTrigger value="podcasts">My matches</TabsTrigger>
                       </TabsList>
-                      <div className="ml-auto mr-4">
-                        <Button>
-                          <PlusCircledIcon className="mr-2 h-4 w-4" />
-                          Add music
-                        </Button>
-                      </div>
+                      <div className="ml-auto mr-4"></div>
                     </div>
                     <TabsContent
                       value="music"
                       className="border-none p-0 outline-none"
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <h2 className="text-2xl font-semibold tracking-tight">
-                            Listen Now
-                          </h2>
-                          <p className="text-sm text-muted-foreground">
-                            Top picks for you. Updated daily.
-                          </p>
-                        </div>
-                      </div>
-                      <Separator className="my-4" />
-                      <div className="relative">
-                        <ScrollArea>
-                          <div className="flex space-x-4 pb-4">
-                            {listenNowAlbums.map((album) => (
-                              <AlbumArtwork
-                                key={album.name}
-                                album={album}
-                                className="w-[250px]"
-                                aspectRatio="portrait"
-                                width={250}
-                                height={330}
-                              />
-                            ))}
-                          </div>
-                          <ScrollBar orientation="horizontal" />
-                        </ScrollArea>
-                      </div>
                       <div className="mt-6 space-y-1">
                         <h2 className="text-2xl font-semibold tracking-tight">
-                          Made for You
+                          Match with influencers
                         </h2>
                         <p className="text-sm text-muted-foreground">
-                          Your personal playlists. Updated daily.
+                          Find your perfect match. Updated daily.
                         </p>
                       </div>
                       <Separator className="my-4" />
                       <div className="relative">
                         <ScrollArea>
                           <div className="flex space-x-4 pb-4">
-                            {madeForYouAlbums.map((album) => (
-                              <AlbumArtwork
-                                key={album.name}
-                                album={album}
+                            {influencers.map((influencer, i) => (
+                              <InfluencerArtwork
+                                key={i}
+                                influencer={influencer}
                                 className="w-[150px]"
                                 aspectRatio="square"
                                 width={150}
