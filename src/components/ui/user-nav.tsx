@@ -15,7 +15,7 @@ import SignOut from "../sign-out";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 
-export function UserNav() {
+export function UserNav({ role }: { role: "influencer" | "company" | null }) {
   const session = useSession();
   return (
     <DropdownMenu>
@@ -38,6 +38,16 @@ export function UserNav() {
             <p className="text-xs leading-none text-muted-foreground">
               {session.data?.user?.email}
             </p>
+            {role === "influencer" && (
+              <p className="text-xs capitalize text-purple-600 leading-none text-muted-foreground">
+                {role}
+              </p>
+            )}
+            {role === "company" && (
+              <p className="text-xs capitalize text-amber-600 leading-none text-muted-foreground">
+                {role}
+              </p>
+            )}
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
