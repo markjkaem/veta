@@ -54,7 +54,7 @@ export default async function MusicPage() {
                         <TabsTrigger value="music" className="relative">
                           Marketplace
                         </TabsTrigger>
-                        <TabsTrigger value="podcasts">My matches</TabsTrigger>
+                        {/* <TabsTrigger value="podcasts">My matches</TabsTrigger> */}
                       </TabsList>
                       <div className="ml-auto mr-4"></div>
                     </div>
