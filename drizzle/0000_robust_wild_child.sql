@@ -13,6 +13,25 @@ CREATE TABLE IF NOT EXISTS "account" (
 	CONSTRAINT account_provider_providerAccountId PRIMARY KEY("provider","providerAccountId")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "blogs" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"title" text,
+	"intro" text,
+	"text1" text,
+	"text2" text,
+	"header1" text,
+	"text3" text,
+	"text4" text,
+	"header2" text,
+	"text5" text,
+	"text6" text,
+	"text7" text,
+	"image" text,
+	"author" text,
+	"date" text,
+	CONSTRAINT "blogs_id_unique" UNIQUE("id")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
 	"sessionToken" text PRIMARY KEY NOT NULL,
 	"userId" text NOT NULL,

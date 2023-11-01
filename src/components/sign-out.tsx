@@ -7,7 +7,7 @@ function SignOut() {
   return (
     <>
       {" "}
-      <Button onClick={() => signOut()}>Sign out</Button>
+      <span onClick={() => signOut()}>Sign out</span>
     </>
   );
 }
