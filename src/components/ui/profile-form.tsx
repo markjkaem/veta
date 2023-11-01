@@ -67,7 +67,7 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
 
   console.log(profileData);
 
-  const selectedCategoriesString = profileData[0].categories!;
+  const selectedCategoriesString = profileData[0]?.categories!;
 
   useEffect(() => {
     const selectedCategories = selectedCategoriesString.split(",");
