@@ -42,7 +42,7 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 interface ProfileData {
-  id: number;
+  id: string | null;
   email: string | null;
   categories: string | null;
   alias: string | null;
