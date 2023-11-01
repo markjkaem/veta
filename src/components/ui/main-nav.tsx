@@ -13,7 +13,7 @@ export function MainNav({
     >
       <Link
         href="/dashboard"
-        className="text-sm font-medium transition-colors hover:text-primary"
+        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Overview
       </Link>
@@ -21,13 +21,13 @@ export function MainNav({
         href="/examples/dashboard"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Customers
+        Marketplace
       </Link>
       <Link
         href="/examples/dashboard"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Products
+        Campaigns
       </Link>
       <Link
         href="/dashboard/settings/profile"

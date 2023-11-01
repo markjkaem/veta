@@ -65,15 +65,13 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
   ]);
   const profileData = props.profileData;
 
-  console.log(profileData);
-
   const selectedCategoriesString = profileData[0]?.categories!;
 
   useEffect(() => {
-    const selectedCategories = selectedCategoriesString.split(",");
+    const selectedCategories = selectedCategoriesString?.split(",");
     const updatedCategories = categories.map((category) => ({
       ...category,
-      selected: selectedCategories.includes(category.name),
+      selected: selectedCategories?.includes(category.name),
     }));
     setCategories(updatedCategories);
   }, []);
@@ -168,7 +166,7 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
                           updatedCategories[index].selected = true; // Update the selected property
                           setCategories(updatedCategories); // Set the new state
                         }}
-                        className="py-2 px-1 bg-pink-300 rounded-sm  text-white font-bold font-inter"
+                        className="py-2 px-1 cursor-pointer bg-pink-300 rounded-sm  text-white font-bold font-inter"
                       >
                         {category.name}
                       </span>
@@ -179,7 +177,7 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
                           updatedCategories[index].selected = false; // Update the selected property
                           setCategories(updatedCategories); // Set the new state
                         }}
-                        className="py-2 px-1 bg-pink-500 rounded-sm  text-white font-bold font-inter"
+                        className="py-2 px-1 cursor-pointer bg-pink-500 rounded-sm  text-white font-bold font-inter"
                       >
                         {category.name}
                       </span>
