@@ -15,16 +15,27 @@ import {
 
 import { Album } from "@/helpers/albums";
 import { playlists } from "@/helpers/playlists";
+import Link from "next/link";
 
+interface Influencer {
+  id: string | null;
+  alias: string | null;
+  url: string | null;
+  email: string | null;
+  bio: string | null;
+  categories: string | null;
+  image: string | null;
+  role: "influencer" | "company" | null;
+}
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
-  album: Album;
+  influencer: Influencer;
   aspectRatio?: "portrait" | "square";
   width?: number;
   height?: number;
 }
 
-export function AlbumArtwork({
-  album,
+export function InfluencerArtwork({
+  influencer,
   aspectRatio = "portrait",
   width,
   height,
@@ -36,16 +47,37 @@ export function AlbumArtwork({
       <ContextMenu>
         <ContextMenuTrigger>
           <div className="overflow-hidden rounded-md">
-            <Image
-              src={album.cover}
-              alt={album.name}
-              width={width}
-              height={height}
-              className={cn(
-                "h-auto w-auto object-cover transition-all hover:scale-105",
-                aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
-              )}
-            />
+            {influencer.image ? (
+              <Link href={`/dashboard/marketplace/users/${influencer.id}`}>
+                <Image
+                  src={influencer?.image as string}
+                  alt={influencer?.alias as string}
+                  width={width}
+                  height={height}
+                  className={cn(
+                    "h-auto w-auto object-cover transition-all hover:scale-105",
+                    aspectRatio === "portrait"
+                      ? "aspect-[3/4]"
+                      : "aspect-square"
+                  )}
+                />
+              </Link>
+            ) : (
+              <Link href={`/marketplace/users/${influencer.id}`}>
+                <Image
+                  src={"/veta-template.jpg"}
+                  alt={influencer?.alias as string}
+                  width={width}
+                  height={height}
+                  className={cn(
+                    "h-auto w-auto object-cover transition-all hover:scale-105",
+                    aspectRatio === "portrait"
+                      ? "aspect-[3/4]"
+                      : "aspect-square"
+                  )}
+                />
+              </Link>
+            )}
           </div>
         </ContextMenuTrigger>
         <ContextMenuContent className="w-40">
@@ -87,8 +119,10 @@ export function AlbumArtwork({
         </ContextMenuContent>
       </ContextMenu>
       <div className="space-y-1 text-sm">
-        <h3 className="font-medium leading-none">{album.name}</h3>
-        <p className="text-xs text-muted-foreground">{album.artist}</p>
+        <h3 className="font-medium leading-none">{influencer?.alias}</h3>
+        <p className="text-xs text-muted-foreground capitalize">
+          {influencer?.role}
+        </p>
       </div>
     </div>
   );

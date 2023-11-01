@@ -6,17 +6,19 @@ import {
   integer,
   serial,
   varchar,
+  uuid,
 } from "drizzle-orm/pg-core"
 import { AdapterAccount } from "next-auth/adapters"
 
 export const profiles = pgTable("profile", {
-  id: serial("id").primaryKey().unique(),
+  id: uuid("id").primaryKey().defaultRandom().unique().notNull(),
   alias: text("alias"),
   url: text("url"),
   email: text("email"),
   bio: text("bio"),
   categories: varchar("categories", { length: 256 }),
   image: text("image"),
+  role: text("role", {enum: ["influencer", "company"]})
 
 })
 
