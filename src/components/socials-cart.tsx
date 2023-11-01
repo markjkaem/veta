@@ -256,7 +256,7 @@ const getSocialAccountMain = async () => {
     getAccountsEndpoint,
     base64data
   );
-  const correctAccount = accounts?.data.filter(
+  const correctAccount = accounts?.data?.filter(
     (item: any) => item.user.id === account?.id
   );
 
