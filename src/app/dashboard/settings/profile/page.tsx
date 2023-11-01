@@ -1,13 +1,8 @@
 import { Separator } from "@/components/ui/separator";
 import db from "../../../../../drizzle/db";
-import {
-  profiles,
-  settingsaccounts,
-  settingsaddress,
-} from "../../../../../drizzle/schema";
+import { profiles } from "../../../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
-import { AddressForm } from "@/components/ui/address-form";
 import { ProfileForm } from "@/components/ui/profile-form";
 
 export default async function SettingsAddresssPage() {
