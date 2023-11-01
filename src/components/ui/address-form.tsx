@@ -99,7 +99,7 @@ export function AddressForm(props: { addressData: AddressData[] }) {
 
     if (!addressRows[0]) {
       await db.insert(settingsaddress).values({
-        companyname: data.companyname!,
+        companyname: data?.companyname!,
         street: data?.street!,
         zipcode: data?.zipcode!,
         city: data?.city!,

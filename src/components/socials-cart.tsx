@@ -26,6 +26,7 @@ import Head from "next/head";
 import Script from "next/script";
 import PhylloConnect from "./phylloconnect";
 import PhylloConnectIt from "./phylloconnect";
+import { revalidatePath } from "next/cache";
 
 const createBuffer = async (): Promise<string> => {
   const clientId = process.env.PHYLLO_ID;
@@ -91,6 +92,7 @@ const createSocials = async () => {
     phylloid: createdUser.id,
     email: session?.user?.email as string,
   });
+  revalidatePath("/dashboard/settings/socials");
 };
 
 const editSocials = async () => {
@@ -139,10 +141,6 @@ const editSocials = async () => {
       .where(eq(phyllo.email, session?.user?.email as string));
 
     const phylloid = user[0]?.phylloid;
-
-    if (!phylloid) {
-      throw new Error("There was not phylloId");
-    }
 
     const base64data = await createBuffer();
     console.log(base64data);
@@ -251,10 +249,6 @@ const getSocialAccountMain = async () => {
   const session = await getServerSession();
   const account = await getSocialAccount(session?.user?.email as string);
 
-  if (!account) {
-    throw new Error("No account was found");
-  }
-
   const base64data = await createBuffer();
 
   const accounts: any = await retrieveAccounts(
@@ -263,7 +257,7 @@ const getSocialAccountMain = async () => {
     base64data
   );
   const correctAccount = accounts?.data.filter(
-    (item: any) => item.user.id === account.id
+    (item: any) => item.user.id === account?.id
   );
 
   return correctAccount;
