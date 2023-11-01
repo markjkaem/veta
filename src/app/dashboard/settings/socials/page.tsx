@@ -1,6 +1,8 @@
 import { Separator } from "@/components/ui/separator";
 import { AppearanceForm } from "@/components/appearance-form";
 import { SocialsCart } from "@/components/socials-cart";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function SettingsSocialsPage() {
   return (
@@ -13,7 +15,19 @@ export default function SettingsSocialsPage() {
         </p>
       </div>
       <Separator />
-      <SocialsCart />
+      <Suspense
+        fallback={
+          <div className="flex flex-col gap-2">
+            <Skeleton className="w-[500px] h-[40px] rounded-md" />
+            <Skeleton className="w-[500px] h-[40px] rounded-md" />
+            <Skeleton className="w-[500px] h-[40px] rounded-md" />
+            <Skeleton className="w-[500px] h-[20px] rounded-md" />
+            <Skeleton className="w-[500px] h-[20px] rounded-md" />
+          </div>
+        }
+      >
+        <SocialsCart />
+      </Suspense>
     </div>
   );
 }

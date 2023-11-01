@@ -27,6 +27,7 @@ import Script from "next/script";
 import PhylloConnect from "./phylloconnect";
 import PhylloConnectIt from "./phylloconnect";
 import { revalidatePath } from "next/cache";
+import { Suspense } from "react";
 
 const createBuffer = async (): Promise<string> => {
   const clientId = process.env.PHYLLO_ID;
@@ -280,8 +281,9 @@ export async function SocialsCart() {
           <CardTitle>Your socials</CardTitle>
           <CardDescription>Add socials to update your profile.</CardDescription>
         </CardHeader>
+
         <CardContent className="grid gap-6">
-          {socialAccountData.map((platform: any, i: number) => {
+          {socialAccountData?.map((platform: any, i: number) => {
             return (
               <div key={i} className="flex justify-between items-center">
                 <div className="flex items-center space-x-4">
