@@ -166,7 +166,7 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
                           updatedCategories[index].selected = true; // Update the selected property
                           setCategories(updatedCategories); // Set the new state
                         }}
-                        className="py-2 px-1 cursor-pointer bg-pink-300 rounded-sm  text-white font-bold font-inter"
+                        className="py-2 px-1 cursor-pointer bg-gray-800 rounded-sm  text-white font-bold font-inter"
                       >
                         {category.name}
                       </span>
@@ -177,7 +177,7 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
                           updatedCategories[index].selected = false; // Update the selected property
                           setCategories(updatedCategories); // Set the new state
                         }}
-                        className="py-2 px-1 cursor-pointer bg-pink-500 rounded-sm  text-white font-bold font-inter"
+                        className="py-2 px-1 cursor-pointer bg-[#F472B6] rounded-sm  text-white font-bold font-inter"
                       >
                         {category.name}
                       </span>
