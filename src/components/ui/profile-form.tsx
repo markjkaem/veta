@@ -25,6 +25,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { PutBlobResult, put } from "@vercel/blob";
+import Image from "next/image";
 
 const profileFormSchema = z.object({
   alias: z
@@ -54,7 +55,6 @@ interface ProfileData {
 export function ProfileForm(props: { profileData: ProfileData[] }) {
   const router = useRouter();
   const inputFileRef = useRef<HTMLInputElement>(null);
-  const [blob, setBlob] = useState<PutBlobResult | null>(null);
   const session = useSession();
   const [categories, setCategories] = useState([
     { name: "Lifestyle", selected: false },
@@ -78,7 +78,7 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
       selected: selectedCategories?.includes(category.name),
     }));
     setCategories(updatedCategories);
-  }, []);
+  });
 
   const defaultValues: Partial<ProfileFormValues> = {
     alias: profileData[0]?.alias!,
@@ -186,10 +186,12 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
       <div className="space-y-2 mt-4 md:w-8/12 w-11/12">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <img
+            <Image
               className="h-40 w-40 object-cover"
               src={profileData[0]?.image!}
-              alt=""
+              alt={profileData[0].alias as string}
+              width={400}
+              height={400}
             />
 
             <input name="file" ref={inputFileRef} type="file" />
