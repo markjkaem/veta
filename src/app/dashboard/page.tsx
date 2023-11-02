@@ -100,7 +100,7 @@ export default async function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    ${balance.toFixed(2)}
+                    ${balance?.toFixed(2)}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     My stripe balance
