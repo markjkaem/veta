@@ -1,9 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import db from "../../../../../drizzle/db";
-import {
-  settingsaccounts,
-  settingsaddress,
-} from "../../../../../drizzle/schema";
+import { settingsaddress } from "../../../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
 import { AddressForm } from "@/components/ui/address-form";

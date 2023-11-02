@@ -9,9 +9,6 @@ import {
   SelectTrigger,
   SelectContent,
   SelectItem,
-  SelectGroup,
-  SelectLabel,
-  SelectSeparator,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +21,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import db from "../../../drizzle/db";
 import { eq } from "drizzle-orm";
