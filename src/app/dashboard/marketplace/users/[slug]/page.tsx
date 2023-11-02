@@ -1,20 +1,6 @@
 import { Metadata } from "next";
-import Image from "next/image";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
-
 import { Button } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-import { InfluencerArtwork } from "@/components/ui/album-artwork";
-import { Menu } from "@/components/ui/menu";
-import { PodcastEmptyPlaceholder } from "@/components/ui/podcast-empty-placeholder";
-import { Sidebar } from "@/components/ui/sidebar";
-import { listenNowAlbums, madeForYouAlbums } from "@/helpers/albums";
-import { playlists } from "@/helpers/playlists";
 import DashboardHeader from "@/components/dashboard-header";
-import Link from "next/link";
 import db from "../../../../../../drizzle/db";
 import { profiles, users } from "../../../../../../drizzle/schema";
 import { and, desc, eq } from "drizzle-orm";

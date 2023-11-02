@@ -1,6 +1,5 @@
 "use client";
 
-import Header from "@/components/header";
 import { signIn } from "next-auth/react";
 
 function SignupButtons() {

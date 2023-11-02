@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -32,11 +31,9 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import db from "../../../drizzle/db";
 import { eq } from "drizzle-orm";
-import { profiles, settingsaccounts, users } from "../../../drizzle/schema";
+import { profiles, users } from "../../../drizzle/schema";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { profile } from "console";
 
 const accountFormSchema = z.object({
   type: z.string(),

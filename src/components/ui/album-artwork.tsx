@@ -13,7 +13,6 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 
-import { Album } from "@/helpers/albums";
 import { playlists } from "@/helpers/playlists";
 import Link from "next/link";
 
