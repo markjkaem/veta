@@ -21,6 +21,9 @@ import DashboardHeader from "@/components/dashboard-header";
 import Stripe from "stripe";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
+import db from "../../../drizzle/db";
+import { users } from "../../../drizzle/schema";
+import { eq } from "drizzle-orm";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -35,12 +38,15 @@ const getBalance = async () => {
       apiVersion: "2023-10-16",
     }
   );
-  const response = (
-    await stripe.customers.search({
-      query: `email:\"${session?.user?.email}\"`,
-    })
-  ).data[0].balance;
-  return response;
+  const user = await db
+    .select({ stripe_id: users.stripe_id })
+    .from(users)
+    .where(eq(users.email, session?.user?.email as string));
+
+  const response: any = await stripe.customers.retrieve(`${user[0].stripe_id}`);
+  const balance = response?.balance;
+
+  return balance;
 };
 
 export default async function DashboardPage() {
