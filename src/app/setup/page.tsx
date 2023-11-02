@@ -112,7 +112,6 @@ export default function AccountForm() {
     } else {
       customer = { id: response[0].stripe_id };
     }
-    console.log(customer);
     toast({
       title: "Your account was succesfully created.",
     });

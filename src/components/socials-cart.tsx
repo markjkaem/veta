@@ -87,7 +87,6 @@ const createSocials = async () => {
   if (!createdUser) {
     throw new Error("User was not created");
   }
-  console.log(createdUser);
 
   await db.insert(phyllo).values({
     phylloid: createdUser.id,
@@ -144,7 +143,6 @@ const editSocials = async () => {
     const phylloid = user[0]?.phylloid;
 
     const base64data = await createBuffer();
-    console.log(base64data);
     const connectedUser = await connectUser(
       BASE_URL,
       getUserEndpoint,
