@@ -23,7 +23,6 @@ const getInfluencer = async (slug: string) => {
 
 const onSubmit = async () => {
   "use server";
-  console.log("server action requested");
 };
 
 export default async function MusicPage({

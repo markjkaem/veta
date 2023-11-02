@@ -74,7 +74,6 @@ export function AddressForm(props: { addressData: AddressData[] }) {
   const session = useSession();
 
   const addressData = props.addressData;
-  console.log(addressData);
 
   const defaultValues: Partial<AddressFormValues> = {
     companyname: addressData[0]?.companyname!,

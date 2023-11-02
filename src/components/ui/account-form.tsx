@@ -88,7 +88,6 @@ export function AccountForm(props: { accountData: AccountData[] }) {
   const session = useSession();
 
   const accountData = props.accountData;
-  console.log(accountData);
 
   const defaultValues: Partial<AccountFormValues> = {
     firstname: accountData[0]?.firstname!,

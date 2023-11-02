@@ -22,7 +22,6 @@ export default async function middleware(req: NextRequest) {
   const isProtected = path.includes('/dashboard');
 
   if(session && path.includes('/dashboard') && !response[0]?.role ){
-    console.log("got no role")
     return NextResponse.redirect(new URL('/setup', req.url));
   }
 
