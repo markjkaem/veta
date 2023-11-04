@@ -29,15 +29,13 @@ import {
   companyProfiles,
   listings,
   influencerProfiles,
+  users,
 } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
-import { ApplyPopoverButton } from "./ApplyPopoverButton";
-
-const onSubmit = async () => {
-  "use server";
-};
+import { ApplyPopoverButtonInfluencer } from "./ApplyPopoverButtonInfluencer";
+import { ApplyPopoverButtonCompany } from "./ApplyPopoverButtonCompany";
 
 const getCompanyProfile = async (email: string) => {
   const response = await db
@@ -53,7 +51,19 @@ const getInfluencerProfile = async () => {
     .select({ influencerId: influencerProfiles.id })
     .from(influencerProfiles)
     .where(eq(influencerProfiles.email, session?.user?.email as string));
+  if (!response[0].influencerId) {
+    return "";
+  }
   return response[0].influencerId;
+};
+
+const getRole = async () => {
+  const session = await getServerSession();
+  const role = await db
+    .select({ role: users.role })
+    .from(users)
+    .where(eq(users.email, session?.user?.email as string));
+  return role[0].role;
 };
 
 export async function CompanyListingCompanyInfo({
@@ -61,6 +71,7 @@ export async function CompanyListingCompanyInfo({
 }: {
   listings: Listings;
 }) {
+  const role = await getRole();
   const companyProfile = await getCompanyProfile(listings.email as string);
   const influencerId = await getInfluencerProfile();
   const selectedCategories = companyProfile?.categories?.split(",");
@@ -101,11 +112,14 @@ export async function CompanyListingCompanyInfo({
       </CardHeader>
       <CardContent>
         <div className="mt-4">
-          <ApplyPopoverButton
-            listingsId={listings.id}
-            companyId={companyProfile.id}
-            influencerId={influencerId}
-          />
+          {role === "influencer" && (
+            <ApplyPopoverButtonInfluencer
+              listingsId={listings.id}
+              companyId={companyProfile.id}
+              influencerId={influencerId}
+            />
+          )}
+          {role === "company" && <ApplyPopoverButtonCompany />}
         </div>
       </CardContent>
     </Card>

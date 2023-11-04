@@ -38,7 +38,7 @@ const onSubmit = async (formData: FormData) => {
   redirect("/dashboard/marketplace");
 };
 
-export function ApplyPopoverButton({
+export function ApplyPopoverButtonInfluencer({
   listingsId,
   companyId,
   influencerId,
