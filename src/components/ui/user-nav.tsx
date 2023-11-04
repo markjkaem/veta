@@ -44,7 +44,7 @@ export function UserNav({ role }: { role: "influencer" | "company" | null }) {
               </p>
             )}
             {role === "company" && (
-              <p className="text-xs capitalize text-amber-600 leading-none text-muted-foreground">
+              <p className="text-xs capitalize text-yellow-400 leading-none text-muted-foreground">
                 {role}
               </p>
             )}

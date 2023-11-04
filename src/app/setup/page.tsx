@@ -31,7 +31,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import db from "../../../drizzle/db";
 import { eq } from "drizzle-orm";
-import { profiles, users } from "../../../drizzle/schema";
+import { influencerProfiles, users } from "../../../drizzle/schema";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -41,9 +41,7 @@ const accountFormSchema = z.object({
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;
 
-interface AccountData {
-  id: number;
-}
+type Role = "influencer" | "company" | null;
 
 export default function AccountForm() {
   const router = useRouter();
@@ -70,28 +68,9 @@ export default function AccountForm() {
     await db
       .update(users)
       .set({
-        role: data?.type as any,
+        role: data?.type as Role,
       })
       .where(eq(users.email, session.data?.user?.email as string));
-
-    const isProfile = await db
-      .select()
-      .from(profiles)
-      .where(eq(profiles.email, session.data?.user?.email as string));
-
-    if (!isProfile[0]) {
-      await db.insert(profiles).values({
-        role: data?.type as any,
-        email: session.data?.user?.email as string,
-      });
-    } else {
-      await db
-        .update(profiles)
-        .set({
-          role: data?.type as any,
-        })
-        .where(eq(profiles.email, session.data?.user?.email as string));
-    }
 
     //  Create stripe account
     const response = await db
@@ -101,7 +80,7 @@ export default function AccountForm() {
 
     let customer;
 
-    if (!response[0].stripe_id?.includes("cus")) {
+    if (!response[0]?.stripe_id?.includes("cus")) {
       customer = await stripe.customers.create({
         email: session.data?.user?.email as string,
       });

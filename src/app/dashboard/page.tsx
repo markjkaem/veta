@@ -54,7 +54,7 @@ export default async function DashboardPage() {
           <div className="flex items-center space-x-2">
             {/* <DatePickerWithRange /> */}
             <Link href={"/dashboard/marketplace"}>
-              <Button>Find matches</Button>
+              <Button>Find campaigns</Button>
             </Link>
           </div>
         </div>

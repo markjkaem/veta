@@ -19,7 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import db from "../../../drizzle/db";
 import { eq } from "drizzle-orm";
-import { profiles } from "../../../drizzle/schema";
+import { influencerProfiles } from "../../../drizzle/schema";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -52,7 +52,7 @@ interface ProfileData {
   image: string | null;
 }
 
-export function ProfileForm(props: { profileData: ProfileData[] }) {
+export function InfluencerProfileForm(props: { profileData: ProfileData[] }) {
   const router = useRouter();
   const inputFileRef = useRef<HTMLInputElement>(null);
   const session = useSession();
@@ -78,12 +78,12 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
       selected: selectedCategories?.includes(category.name),
     }));
     setCategories(updatedCategories);
-  });
+  }, []);
 
   const defaultValues: Partial<ProfileFormValues> = {
-    alias: profileData[0]?.alias!,
-    bio: profileData[0]?.bio!,
-    url: profileData[0]?.url!,
+    alias: profileData[0]?.alias ?? undefined,
+    bio: profileData[0]?.bio ?? undefined,
+    url: profileData[0]?.url ?? undefined,
   };
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -104,8 +104,8 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
   async function onSubmit(data: ProfileFormValues) {
     const profilerows = await db
       .select()
-      .from(profiles)
-      .where(eq(profiles.email, session.data?.user?.email as string));
+      .from(influencerProfiles)
+      .where(eq(influencerProfiles.email, session.data?.user?.email as string));
     const isProfile = profilerows[0];
 
     const createCategoryString = (): string => {
@@ -120,7 +120,7 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
     if (!inputFileRef.current?.files) {
       // executed
       if (!isProfile) {
-        await db.insert(profiles).values({
+        await db.insert(influencerProfiles).values({
           alias: data.alias,
           bio: data.bio,
           url: data.url,
@@ -133,14 +133,16 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
         router.push("/dashboard/settings/profile");
       } else {
         await db
-          .update(profiles)
+          .update(influencerProfiles)
           .set({
             alias: data.alias,
             bio: data.bio,
             url: data.url,
             categories: categoryString,
           })
-          .where(eq(profiles.email, session.data?.user?.email as string));
+          .where(
+            eq(influencerProfiles.email, session.data?.user?.email as string)
+          );
         toast({
           title: "Your profile was succesfully updated.",
         });
@@ -150,7 +152,7 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
       const file = inputFileRef.current.files[0];
       const newBlob = await createBlobFile(file);
       if (!isProfile) {
-        await db.insert(profiles).values({
+        await db.insert(influencerProfiles).values({
           alias: data.alias,
           bio: data.bio,
           url: data.url,
@@ -164,7 +166,7 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
         router.push("/dashboard/settings/profile");
       } else {
         await db
-          .update(profiles)
+          .update(influencerProfiles)
           .set({
             alias: data.alias,
             bio: data.bio,
@@ -172,7 +174,9 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
             image: newBlob.url,
             categories: categoryString,
           })
-          .where(eq(profiles.email, session.data?.user?.email as string));
+          .where(
+            eq(influencerProfiles.email, session.data?.user?.email as string)
+          );
         toast({
           title: "Your profile was succesfully updated.",
         });
@@ -186,13 +190,15 @@ export function ProfileForm(props: { profileData: ProfileData[] }) {
       <div className="space-y-2 mt-4 md:w-8/12 w-11/12">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <Image
-              className="h-40 w-40 object-cover"
-              src={profileData[0]?.image!}
-              alt={profileData[0].alias as string}
-              width={400}
-              height={400}
-            />
+            {profileData[0]?.image && (
+              <Image
+                className="h-40 w-40 object-cover"
+                src={profileData[0]?.image!}
+                alt={profileData[0]?.alias! as string}
+                width={400}
+                height={400}
+              />
+            )}
 
             <input name="file" ref={inputFileRef} type="file" />
             <FormField

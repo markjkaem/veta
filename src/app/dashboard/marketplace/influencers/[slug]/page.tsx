@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import DashboardHeader from "@/components/dashboard-header";
 import db from "../../../../../../drizzle/db";
-import { profiles, users } from "../../../../../../drizzle/schema";
+import { influencerProfiles } from "../../../../../../drizzle/schema";
 import { and, desc, eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 const getInfluencer = async (slug: string) => {
   const response = await db
     .select()
-    .from(profiles)
-    .where(and(eq(profiles.role, "influencer"), eq(profiles.id, slug)));
+    .from(influencerProfiles)
+    .where(eq(influencerProfiles.id, slug));
 
   return response[0];
 };
@@ -44,6 +44,7 @@ export default async function MusicPage({
       <div className="hidden md:block">
         {/* <Menu /> */}
         <div className="border-t">
+          Alias
           {influencers?.alias}
           <form action={onSubmit}>
             <Button type="submit">Connect</Button>
