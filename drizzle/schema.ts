@@ -7,6 +7,7 @@ import {
   serial,
   varchar,
   uuid,
+  boolean,
 } from "drizzle-orm/pg-core"
 import { AdapterAccount } from "next-auth/adapters"
 
@@ -45,7 +46,22 @@ export const listingsTasks = pgTable("listingTask", {
   listingId: text("listingid"),
   platform: text("platform", {enum: ["tiktok", "instragram", "youtube", "x", "twitch", "facebook", "substack", "instagramlite", "adsense", "spotify", "linkedin", "beehiiv"]}),
   description: text("description")
-  
+})
+
+export const campaigns = pgTable("campaign", {
+  id: uuid("id").primaryKey().defaultRandom().unique().notNull(),
+  listingId: text("listingId"),
+  companyId: text("companyId"),
+  influencerId: text("influencerId"),
+  isActive: boolean("isActive").default(false)
+})
+
+export const campaignMessages = pgTable("campaignmessage", {
+  id: uuid("id").primaryKey().defaultRandom().unique().notNull(),
+  campaignId: text("campaignId"),
+  email: text("email"),
+  receiver: text("receiver"),
+  message: text("message")
 })
 
 export const settingsaccounts = pgTable("settingsaccount", {

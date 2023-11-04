@@ -25,16 +25,21 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Listings } from "./types/Listings";
 import db from "../../drizzle/db";
-import { companyProfiles, listings } from "../../drizzle/schema";
+import {
+  companyProfiles,
+  listings,
+  influencerProfiles,
+} from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
+import { ApplyPopoverButton } from "./ApplyPopoverButton";
 
 const onSubmit = async () => {
   "use server";
 };
 
-const getProfile = async (email: string) => {
+const getCompanyProfile = async (email: string) => {
   const response = await db
     .select()
     .from(companyProfiles)
@@ -42,13 +47,22 @@ const getProfile = async (email: string) => {
   return response[0];
 };
 
+const getInfluencerProfile = async () => {
+  const session = await getServerSession();
+  const response = await db
+    .select({ influencerId: influencerProfiles.id })
+    .from(influencerProfiles)
+    .where(eq(influencerProfiles.email, session?.user?.email as string));
+  return response[0].influencerId;
+};
+
 export async function CompanyListingCompanyInfo({
   listings,
 }: {
   listings: Listings;
 }) {
-  const companyProfile = await getProfile(listings.email as string);
-
+  const companyProfile = await getCompanyProfile(listings.email as string);
+  const influencerId = await getInfluencerProfile();
   const selectedCategories = companyProfile?.categories?.split(",");
 
   return (
@@ -84,12 +98,16 @@ export async function CompanyListingCompanyInfo({
             </div>
           </CardDescription>
         </div>
-        <div className="flex items-center space-x-1 rounded-md ">
-          <form action={onSubmit}>
-            <Button type="submit">Apply</Button>
-          </form>
-        </div>
       </CardHeader>
+      <CardContent>
+        <div className="mt-4">
+          <ApplyPopoverButton
+            listingsId={listings.id}
+            companyId={companyProfile.id}
+            influencerId={influencerId}
+          />
+        </div>
+      </CardContent>
     </Card>
   );
 }

@@ -44,12 +44,11 @@ export default async function MusicPage({
         {/* <Menu /> */}
         <div className="border-t">
           <div className="p-4 grid md:flex w-screen gap-4 grid-cols-1">
-            <SocialCart listings={listings} />
             <div className="flex flex-col w-full gap-4">
-              {" "}
               <CompanyListingCompanyInfo listings={listings} />
               <CompanyListingInfo listings={listings} />
-            </div>
+            </div>{" "}
+            <SocialCart listings={listings} />
           </div>
         </div>
       </div>
