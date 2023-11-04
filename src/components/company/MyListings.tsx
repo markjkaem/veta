@@ -16,7 +16,7 @@ import {
 import { playlists } from "@/helpers/playlists";
 import Link from "next/link";
 import db from "../../../drizzle/db";
-import { companyProfiles } from "../../../drizzle/schema";
+import { companyProfiles, listingsTasks } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { Listings } from "../types/Listings";
 
@@ -40,6 +40,14 @@ interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   height?: number;
 }
 
+const getListingTasks = async (id: string) => {
+  const response = await db
+    .select()
+    .from(listingsTasks)
+    .where(eq(listingsTasks.listingId, id));
+  return response;
+};
+
 export async function MyListings({
   listings,
   profile,
@@ -49,8 +57,9 @@ export async function MyListings({
   className,
   ...props
 }: AlbumArtworkProps) {
+  const listingTasks = await getListingTasks(listings.id);
   return (
-    <div className={cn("space-y-3", className)} {...props}>
+    <div className={cn("space-y-3 relative", className)} {...props}>
       <ContextMenu>
         <ContextMenuTrigger>
           <div className="overflow-hidden rounded-md">
@@ -70,7 +79,7 @@ export async function MyListings({
                 />
               </Link>
             ) : (
-              <Link href={`/marketplace/companies/${listings.id}`}>
+              <Link href={`/dashboard/campaigns/listings/${listings.id}`}>
                 <Image
                   src={"/veta-template.jpg"}
                   alt={profile?.alias as string}
@@ -85,52 +94,46 @@ export async function MyListings({
                 />
               </Link>
             )}
+            <div className="absolute z-10 bottom-20 space-y-1 text-sm">
+              <div className="flex -space-x-4">
+                {listingTasks
+                  .filter((item, index) => index < 3)
+                  .map((item, index) => {
+                    return (
+                      <img
+                        key={index}
+                        className="w-10 h-10 border-2 border-white bg-white p-1 rounded-full dark:border-gray-800"
+                        src={`/platforms/${item.platform}.png`}
+                        alt=""
+                      />
+                    );
+                  })}
+
+                <Link
+                  className="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-gray-700 border-2 border-white rounded-full hover:bg-gray-600 dark:border-gray-800"
+                  href={`/dashboard/campaigns/listings/${listings.id}`}
+                >
+                  {listingTasks.length >= 3 && (
+                    <span>+{listingTasks.length - 3}</span>
+                  )}
+                  {listingTasks.length == 2 && (
+                    <span>+{listingTasks.length - 2}</span>
+                  )}
+
+                  {listingTasks.length == 1 && (
+                    <span>+{listingTasks.length - 1}</span>
+                  )}
+                  {listingTasks.length == 0 && (
+                    <span>+{listingTasks.length}</span>
+                  )}
+                </Link>
+              </div>
+            </div>
           </div>
+          <h3 className="font-medium mt-8 leading-none">{listings?.title}</h3>
+          <p className="text-xs text-muted-foreground capitalize">Campaign</p>
         </ContextMenuTrigger>
-        <ContextMenuContent className="w-40">
-          <ContextMenuItem>Add to Library</ContextMenuItem>
-          <ContextMenuSub>
-            <ContextMenuSubTrigger>Add to Playlist</ContextMenuSubTrigger>
-            <ContextMenuSubContent className="w-48">
-              <ContextMenuItem>
-                <PlusCircledIcon className="mr-2 h-4 w-4" />
-                New Playlist
-              </ContextMenuItem>
-              <ContextMenuSeparator />
-              {playlists.map((playlist) => (
-                <ContextMenuItem key={playlist}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="mr-2 h-4 w-4"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M21 15V6M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 12H3M16 6H3M12 18H3" />
-                  </svg>
-                  {playlist}
-                </ContextMenuItem>
-              ))}
-            </ContextMenuSubContent>
-          </ContextMenuSub>
-          <ContextMenuSeparator />
-          <ContextMenuItem>Play Next</ContextMenuItem>
-          <ContextMenuItem>Play Later</ContextMenuItem>
-          <ContextMenuItem>Create Station</ContextMenuItem>
-          <ContextMenuSeparator />
-          <ContextMenuItem>Like</ContextMenuItem>
-          <ContextMenuItem>Share</ContextMenuItem>
-        </ContextMenuContent>
       </ContextMenu>
-      <div className="space-y-1 text-sm">
-        <h3 className="font-medium leading-none">{listings?.title}</h3>
-        <p className="text-xs text-muted-foreground capitalize">
-          {profile?.alias}
-        </p>
-      </div>
     </div>
   );
 }
