@@ -10,7 +10,7 @@ import {
 } from "drizzle-orm/pg-core"
 import { AdapterAccount } from "next-auth/adapters"
 
-export const profiles = pgTable("profile", {
+export const influencerProfiles = pgTable("influencerProfile", {
   id: uuid("id").primaryKey().defaultRandom().unique().notNull(),
   alias: text("alias"),
   url: text("url"),
@@ -18,8 +18,34 @@ export const profiles = pgTable("profile", {
   bio: text("bio"),
   categories: varchar("categories", { length: 256 }),
   image: text("image"),
-  role: text("role", {enum: ["influencer", "company"]})
+})
 
+export const companyProfiles = pgTable("companyProfile", {
+  id: uuid("id").primaryKey().defaultRandom().unique().notNull(),
+  alias: text("alias"),
+  url: text("url"),
+  email: text("email"),
+  bio: text("bio"),
+  categories: varchar("categories", { length: 256 }),
+  countries: varchar("countries", { length: 256 }),
+  genders: varchar("genders", { length: 256 }),
+  image: text("image"),
+})
+
+export const listings = pgTable("listings", {
+  id: uuid("id").primaryKey().defaultRandom().unique().notNull(),
+  title: text("title"),
+  description: text("description"),
+  briefing: text("briefing"),
+  email: text("email"),
+})
+
+export const listingsTasks = pgTable("listingTask", {
+  id: uuid("id").primaryKey().defaultRandom().unique().notNull(),
+  listingId: text("listingid"),
+  platform: text("platform", {enum: ["tiktok", "instragram", "youtube", "x", "twitch", "facebook", "substack", "instagramlite", "adsense", "spotify", "linkedin", "beehiiv"]}),
+  description: text("description")
+  
 })
 
 export const settingsaccounts = pgTable("settingsaccount", {

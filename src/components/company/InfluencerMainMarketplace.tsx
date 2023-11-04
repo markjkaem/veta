@@ -24,7 +24,6 @@ interface Influencer {
   bio: string | null;
   categories: string | null;
   image: string | null;
-  role: "influencer" | "company" | null;
 }
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   influencer: Influencer;
@@ -33,7 +32,7 @@ interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   height?: number;
 }
 
-export function InfluencerArtwork({
+export function InfluencerMainMarketplace({
   influencer,
   aspectRatio = "portrait",
   width,
@@ -47,7 +46,9 @@ export function InfluencerArtwork({
         <ContextMenuTrigger>
           <div className="overflow-hidden rounded-md">
             {influencer.image ? (
-              <Link href={`/dashboard/marketplace/users/${influencer.id}`}>
+              <Link
+                href={`/dashboard/marketplace/influencers/${influencer.id}`}
+              >
                 <Image
                   src={influencer?.image as string}
                   alt={influencer?.alias as string}
@@ -62,7 +63,7 @@ export function InfluencerArtwork({
                 />
               </Link>
             ) : (
-              <Link href={`/marketplace/users/${influencer.id}`}>
+              <Link href={`/marketplace/influencers/${influencer.id}`}>
                 <Image
                   src={"/veta-template.jpg"}
                   alt={influencer?.alias as string}
@@ -119,9 +120,7 @@ export function InfluencerArtwork({
       </ContextMenu>
       <div className="space-y-1 text-sm">
         <h3 className="font-medium leading-none">{influencer?.alias}</h3>
-        <p className="text-xs text-muted-foreground capitalize">
-          {influencer?.role}
-        </p>
+        <p className="text-xs text-muted-foreground capitalize">Influencer</p>
       </div>
     </div>
   );

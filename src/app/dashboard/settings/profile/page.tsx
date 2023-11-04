@@ -1,17 +1,38 @@
 import { Separator } from "@/components/ui/separator";
 import db from "../../../../../drizzle/db";
-import { profiles } from "../../../../../drizzle/schema";
+import {
+  companyProfiles,
+  influencerProfiles,
+  users,
+} from "../../../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
-import { ProfileForm } from "@/components/ui/profile-form";
+import { CompanyProfileForm } from "@/components/company/CompanyProfileForm";
+import { InfluencerProfileForm } from "@/components/influencer/InfluencerProfileForm";
+
+const checkRole = async () => {
+  const session = await getServerSession();
+  const response = await db
+    .select({ role: users.role })
+    .from(users)
+    .where(eq(users.email, session?.user?.email as string));
+
+  return response[0].role;
+};
 
 export default async function SettingsAddresssPage() {
   const session = await getServerSession();
+  const role = await checkRole();
   // This can come from your database or API.
-  const profileData = await db
+  const influencerData = await db
     .select()
-    .from(profiles)
-    .where(eq(profiles.email, session?.user?.email as string));
+    .from(influencerProfiles)
+    .where(eq(influencerProfiles.email, session?.user?.email as string));
+
+  const companyData = await db
+    .select()
+    .from(companyProfiles)
+    .where(eq(companyProfiles.email, session?.user?.email as string));
 
   return (
     <div className="space-y-6">
@@ -22,7 +43,10 @@ export default async function SettingsAddresssPage() {
         </p>
       </div>
       <Separator />
-      <ProfileForm profileData={profileData} />
+      {role === "company" && <CompanyProfileForm companyData={companyData} />}
+      {role === "influencer" && (
+        <InfluencerProfileForm profileData={influencerData} />
+      )}
     </div>
   );
 }

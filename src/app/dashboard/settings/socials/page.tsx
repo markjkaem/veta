@@ -1,5 +1,4 @@
 import { Separator } from "@/components/ui/separator";
-import { AppearanceForm } from "@/components/appearance-form";
 import { SocialsCart } from "@/components/socials-cart";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";

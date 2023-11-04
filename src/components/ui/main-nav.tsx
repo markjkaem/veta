@@ -24,16 +24,10 @@ export function MainNav({
         Marketplace
       </Link>
       <Link
-        href="/examples/dashboard"
+        href="/dashboard/campaigns"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Campaigns
-      </Link>
-      <Link
-        href="/dashboard/settings/profile"
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-      >
-        Settings
       </Link>
     </nav>
   );
