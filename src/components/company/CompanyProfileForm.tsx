@@ -117,10 +117,8 @@ export function CompanyProfileForm(props: { companyData: CompanyData[] }) {
       return cateString;
     };
     const categoryString = createCategoryString();
-
-    // image blob upload
-    if (!inputFileRef.current?.files) {
-      // executed
+    if (!inputFileRef?.current?.files![0]?.name) {
+      console.log("no file found");
       if (!isProfile) {
         await db.insert(companyProfiles).values({
           alias: data.alias,
@@ -151,6 +149,7 @@ export function CompanyProfileForm(props: { companyData: CompanyData[] }) {
         router.push("/dashboard/settings/profile");
       }
     } else {
+      console.log("file found");
       const file = inputFileRef.current.files[0];
       const newBlob = await createBlobFile(file);
       if (!isProfile) {
@@ -208,7 +207,7 @@ export function CompanyProfileForm(props: { companyData: CompanyData[] }) {
               name="alias"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Alias</FormLabel>
+                  <FormLabel>Company name</FormLabel>
                   <FormControl>
                     <Input placeholder="Davinci11" {...field} />
                   </FormControl>
@@ -259,7 +258,7 @@ export function CompanyProfileForm(props: { companyData: CompanyData[] }) {
               name="bio"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Bio</FormLabel>
+                  <FormLabel>Company bio</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Tell us a little bit about yourself"

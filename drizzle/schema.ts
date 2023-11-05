@@ -59,8 +59,8 @@ export const campaigns = pgTable("campaign", {
 export const campaignMessages = pgTable("campaignmessage", {
   id: uuid("id").primaryKey().defaultRandom().unique().notNull(),
   campaignId: text("campaignId"),
-  email: text("email"),
-  receiver: text("receiver"),
+  senderId: text("senderId"),
+  receiverId: text("receiverId"),
   message: text("message")
 })
 

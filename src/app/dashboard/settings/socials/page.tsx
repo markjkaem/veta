@@ -2,31 +2,31 @@ import { Separator } from "@/components/ui/separator";
 import { SocialsCart } from "@/components/socials-cart";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import InfluencerSocials from "@/components/influencer/InfluencerSocials";
+import { getServerSession } from "next-auth";
+import db from "../../../../../drizzle/db";
+import { users } from "../../../../../drizzle/schema";
+import { eq } from "drizzle-orm";
 
-export default function SettingsSocialsPage() {
+const getRole = async () => {
+  const session = await getServerSession();
+  const role = await db
+    .select({ role: users.role })
+    .from(users)
+    .where(eq(users.email, session?.user?.email as string));
+  return role[0].role;
+};
+
+export default async function SettingsSocialsPage() {
+  const role = await getRole();
   return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium">Socials</h3>
-        <p className="text-sm text-muted-foreground">
-          Add some socials to your profile, to attract more companies to your
-          account.
-        </p>
-      </div>
-      <Separator />
-      <Suspense
-        fallback={
-          <div className="flex flex-col gap-2">
-            <Skeleton className="w-[500px] h-[40px] rounded-md" />
-            <Skeleton className="w-[500px] h-[40px] rounded-md" />
-            <Skeleton className="w-[500px] h-[40px] rounded-md" />
-            <Skeleton className="w-[500px] h-[20px] rounded-md" />
-            <Skeleton className="w-[500px] h-[20px] rounded-md" />
-          </div>
-        }
-      >
-        <SocialsCart />
-      </Suspense>
+    <div>
+      {role === "company" && (
+        <div>
+          Influencers only can connect social accounts with their account.
+        </div>
+      )}
+      {role === "influencer" && <InfluencerSocials />}
     </div>
   );
 }

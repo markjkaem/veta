@@ -48,13 +48,17 @@ const getCompanyProfile = async (email: string) => {
 const getInfluencerProfile = async () => {
   const session = await getServerSession();
   const response = await db
-    .select({ influencerId: influencerProfiles.id })
+    .select({
+      influencerId: influencerProfiles.id,
+    })
     .from(influencerProfiles)
     .where(eq(influencerProfiles.email, session?.user?.email as string));
-  if (!response[0].influencerId) {
-    return "";
+  if (!response[0]?.influencerId) {
+    return { influencerId: "", senderName: "" };
   }
-  return response[0].influencerId;
+  return {
+    influencerId: response[0]?.influencerId,
+  };
 };
 
 const getRole = async () => {
@@ -73,7 +77,7 @@ export async function CompanyListingCompanyInfo({
 }) {
   const role = await getRole();
   const companyProfile = await getCompanyProfile(listings.email as string);
-  const influencerId = await getInfluencerProfile();
+  const influencerProfile = await getInfluencerProfile();
   const selectedCategories = companyProfile?.categories?.split(",");
 
   return (
@@ -96,31 +100,28 @@ export async function CompanyListingCompanyInfo({
           <CardDescription>{companyProfile?.bio}</CardDescription>
           <CardDescription>
             {" "}
-            <div className="w-80 mt-4 grid lg:grid-cols-3 md:gap-6 grid-cols-2 gap-6">
+            <span className="w-80 mt-4 grid lg:grid-cols-3 md:gap-6 grid-cols-2 gap-6">
               {selectedCategories?.map((category, index) => {
                 return (
-                  <div key={index}>
+                  <span key={index}>
                     <span className="py-2 px-1 bg-[#F472B6] rounded-sm  text-white font-bold font-inter">
                       {category}
                     </span>
-                  </div>
+                  </span>
                 );
               })}
-            </div>
+            </span>
           </CardDescription>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="mt-4">
-          {role === "influencer" && (
-            <ApplyPopoverButtonInfluencer
-              listingsId={listings.id}
-              companyId={companyProfile.id}
-              influencerId={influencerId}
-            />
-          )}
-          {role === "company" && <ApplyPopoverButtonCompany />}
-        </div>
+        {role === "influencer" && (
+          <ApplyPopoverButtonInfluencer
+            listingsId={listings.id}
+            companyId={companyProfile.id}
+            influencerId={influencerProfile.influencerId}
+          />
+        )}
       </CardContent>
     </Card>
   );
