@@ -21,13 +21,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
-import db from "../../../drizzle/db";
-import { eq } from "drizzle-orm";
-import { settingsaccounts } from "../../../drizzle/schema";
-import { useSession } from "next-auth/react";
+
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { accountAction } from "@/app/actions";
 
 const phoneRegex = new RegExp(
   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -84,9 +80,6 @@ interface AccountData {
 }
 
 export function AccountForm(props: { accountData: AccountData[] }) {
-  const router = useRouter();
-  const session = useSession();
-
   const accountData = props.accountData;
 
   const defaultValues: Partial<AccountFormValues> = {
@@ -103,48 +96,9 @@ export function AccountForm(props: { accountData: AccountData[] }) {
     mode: "onChange",
   });
 
-  async function onSubmit(data: AccountFormValues) {
-    const accountRows = await db
-      .select()
-      .from(settingsaccounts)
-      .where(eq(settingsaccounts.email, session.data?.user?.email as string));
-
-    if (!accountRows[0]) {
-      await db.insert(settingsaccounts).values({
-        firstname: data?.firstname!,
-        lastname: data?.lastname!,
-        gender: data?.gender!,
-        phone: data?.phone!,
-        vatnumber: data?.vatnumber!,
-        companyid: data?.companyId!,
-        email: session.data?.user?.email as string,
-      });
-      toast({
-        title: "Your account was succesfully updated.",
-      });
-      router.push("/dashboard/settings/account");
-    } else {
-      await db
-        .update(settingsaccounts)
-        .set({
-          firstname: data?.firstname!,
-          lastname: data?.lastname!,
-          gender: data?.gender!,
-          phone: data?.phone!,
-          vatnumber: data?.vatnumber!,
-          companyid: data?.companyId!,
-        })
-        .where(eq(settingsaccounts.email, session.data?.user?.email as string));
-      toast({
-        title: "Your account was succesfully updated.",
-      });
-      router.push("/dashboard/settings/account");
-    }
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form action={accountAction} className="space-y-8">
         <FormField
           control={form.control}
           name="firstname"
@@ -180,7 +134,11 @@ export function AccountForm(props: { accountData: AccountData[] }) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Gender</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                name="gender"
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a gender to display" />

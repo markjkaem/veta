@@ -23,6 +23,15 @@ export const metadata: Metadata = {
   description: "Example dashboard app built using the components.",
 };
 
+const getRole = async () => {
+  const session = await getServerSession();
+  const role = await db
+    .select({ role: users.role })
+    .from(users)
+    .where(eq(users.email, session?.user?.email as string));
+  return role[0].role;
+};
+
 const getBalance = async () => {
   const session = await getServerSession();
   const stripe = new Stripe(
@@ -44,7 +53,7 @@ const getBalance = async () => {
 
 export default async function DashboardPage() {
   const balance = await getBalance();
-
+  const role = await getRole();
   return (
     <>
       <DashboardHeader />
@@ -54,7 +63,8 @@ export default async function DashboardPage() {
           <div className="flex items-center space-x-2">
             {/* <DatePickerWithRange /> */}
             <Link href={"/dashboard/marketplace"}>
-              <Button>Find campaigns</Button>
+              {role === "influencer" && <Button>Find campaigns</Button>}
+              {role === "company" && <Button>Find influencers</Button>}
             </Link>
           </div>
         </div>

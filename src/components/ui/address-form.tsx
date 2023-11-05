@@ -30,6 +30,7 @@ import { eq } from "drizzle-orm";
 import { settingsaddress } from "../../../drizzle/schema";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { addressAction } from "@/app/actions";
 
 const phoneRegex = new RegExp(
   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -70,9 +71,6 @@ interface AddressData {
 }
 
 export function AddressForm(props: { addressData: AddressData[] }) {
-  const router = useRouter();
-  const session = useSession();
-
   const addressData = props.addressData;
 
   const defaultValues: Partial<AddressFormValues> = {
@@ -88,46 +86,9 @@ export function AddressForm(props: { addressData: AddressData[] }) {
     mode: "onChange",
   });
 
-  async function onSubmit(data: AddressFormValues) {
-    const addressRows = await db
-      .select()
-      .from(settingsaddress)
-      .where(eq(settingsaddress.email, session.data?.user?.email as string));
-
-    if (!addressRows[0]) {
-      await db.insert(settingsaddress).values({
-        companyname: data?.companyname!,
-        street: data?.street!,
-        zipcode: data?.zipcode!,
-        city: data?.city!,
-        country: data?.country!,
-        email: session.data?.user?.email as string,
-      });
-      toast({
-        title: "Your address was succesfully updated.",
-      });
-      router.push("/dashboard/settings/address");
-    } else {
-      await db
-        .update(settingsaddress)
-        .set({
-          companyname: data?.companyname!,
-          street: data?.street!,
-          zipcode: data?.zipcode!,
-          city: data?.city!,
-          country: data?.country!,
-        })
-        .where(eq(settingsaddress.email, session.data?.user?.email as string));
-      toast({
-        title: "Your address was succesfully updated.",
-      });
-      router.push("/dashboard/settings/address");
-    }
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form action={addressAction} className="space-y-8">
         <FormField
           control={form.control}
           name="companyname"
@@ -191,7 +152,11 @@ export function AddressForm(props: { addressData: AddressData[] }) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Country</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                name="country"
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a country to display" />

@@ -4,6 +4,7 @@ import db from "../../../../drizzle/db";
 import { companyProfiles, listings, users } from "../../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
+import InfluencerListings from "@/components/influencer/InfluencerListings";
 
 const getListings = async () => {
   const session = await getServerSession();
@@ -35,15 +36,15 @@ const checkRole = async () => {
 
 export default async function Page() {
   const role = await checkRole();
-  if (role !== "company") {
-    console.log("not a company");
-  }
   const listings = await getListings();
   const profile = await getProfile();
   return (
     <>
       <DashboardHeader />
-      <CompanyListings listings={listings} profile={profile} role={role} />
+      {role === "company" && (
+        <CompanyListings listings={listings} profile={profile} role={role} />
+      )}
+      {role === "influencer" && <InfluencerListings profile={profile} />}
     </>
   );
 }

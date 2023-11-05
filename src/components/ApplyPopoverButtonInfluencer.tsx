@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,6 +11,19 @@ import db from "../../drizzle/db";
 import { campaignMessages, campaigns } from "../../drizzle/schema";
 import { revalidatePath } from "next/cache";
 import { redirect, useRouter } from "next/navigation";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 const onSubmit = async (formData: FormData) => {
   "use server";
@@ -32,9 +44,12 @@ const onSubmit = async (formData: FormData) => {
   if (!campaign) {
     throw new Error("campaign could not be created");
   }
-  await db
-    .insert(campaignMessages)
-    .values({ campaignId: campaign[0].id, message: message });
+  await db.insert(campaignMessages).values({
+    campaignId: campaign[0].id,
+    message: message,
+    senderId: influencerId,
+    receiverId: companyId,
+  });
   redirect("/dashboard/marketplace");
 };
 
@@ -48,35 +63,44 @@ export function ApplyPopoverButtonInfluencer({
   influencerId: string;
 }) {
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
         <Button variant="outline">Apply</Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80 ml-8">
+      </AlertDialogTrigger>
+      <AlertDialogContent>
         <form action={onSubmit}>
-          <Textarea
-            value={companyId}
-            name="companyId"
-            className="mb-4 hidden"
-          />
-          <Textarea
-            value={listingsId}
-            name="listingsId"
-            className="mb-4 hidden"
-          />
-          <Textarea
-            value={influencerId}
-            name="influencerId"
-            className="mb-4 hidden"
-          />
-          <Textarea
-            name="message"
-            className="mb-4"
-            placeholder="Type your message here."
-          />
-          <Button type="submit">Apply</Button>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Write a short motivation</AlertDialogTitle>
+            <AlertDialogDescription>
+              <Textarea
+                value={companyId}
+                name="companyId"
+                className="mb-4 hidden"
+              />
+              <Textarea
+                value={listingsId}
+                name="listingsId"
+                className="mb-4 hidden"
+              />
+              <Textarea
+                value={influencerId}
+                name="influencerId"
+                className="mb-4 hidden"
+              />
+              <Textarea
+                name="message"
+                className="mb-4 h-56"
+                placeholder="I am interested to join your campaign because i love sushi..."
+              />
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+            <Button type="submit">Apply</Button>
+          </AlertDialogFooter>
         </form>
-      </PopoverContent>
-    </Popover>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
