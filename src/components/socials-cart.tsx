@@ -13,8 +13,10 @@ import { getServerSession } from "next-auth";
 import {
   BASE_URL,
   accountIdEndpoint,
+  createBuffer,
   generateUuid,
   getAccountsEndpoint,
+  getSocialAccountMain,
   getUserEndpoint,
   sdktokenEndpoint,
   usersEndpoint,
@@ -28,15 +30,6 @@ import PhylloConnect from "./phylloconnect";
 import PhylloConnectIt from "./phylloconnect";
 import { revalidatePath } from "next/cache";
 import { Suspense } from "react";
-
-const createBuffer = async (): Promise<string> => {
-  const clientId = process.env.PHYLLO_ID;
-  const clientSecret = process.env.PHYLLO_SECRET;
-  const combined = `${clientId}:${clientSecret}`;
-  const buffer = Buffer.from(combined);
-  const base64data = buffer.toString("base64");
-  return base64data;
-};
 
 const createSocials = async () => {
   "use server";
@@ -172,99 +165,13 @@ const checkUserPhylloIdStatus = async () => {
   return isPhylloId;
 };
 
-const getSocialAccountMain = async () => {
-  const retrieveAccounts = async (
-    BASE_URL: string,
-    accountEndpoint: string,
-    base64data: string
-  ) => {
-    const response = await fetch(`${BASE_URL}${accountEndpoint}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Basic ${base64data}`,
-      },
-    });
-    const data = await response.json();
-    return data;
-  };
-
-  const retrieveAccount = async (
-    BASE_URL: string,
-    getUserEndpoint: string,
-    accountIdEndpoint: string,
-    base64data: string,
-    phylloid: string
-  ) => {
-    const response = await fetch(`${BASE_URL}${getUserEndpoint}${phylloid}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Basic ${base64data}`,
-      },
-    });
-    const data = await response.json();
-    if (!data) {
-      throw new Error("No account found matching with account in database");
-    }
-
-    const responseUser = await fetch(
-      `${BASE_URL}${getUserEndpoint}${data.id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Basic ${base64data}`,
-        },
-      }
-    );
-    const dataUser = await responseUser.json();
-    return dataUser;
-  };
-
-  const getSocialAccount = async (email: string) => {
-    const userData = await db
-      .select()
-      .from(phyllo)
-      .where(eq(phyllo.email, email as string));
-
-    const phylloid = userData[0]?.phylloid;
-    const base64data = await createBuffer();
-
-    if (phylloid) {
-      const account = await retrieveAccount(
-        BASE_URL,
-        getUserEndpoint,
-        accountIdEndpoint,
-        base64data,
-        phylloid
-      );
-      return account;
-    }
-  };
-  const session = await getServerSession();
-  const account = await getSocialAccount(session?.user?.email as string);
-
-  const base64data = await createBuffer();
-
-  const accounts: any = await retrieveAccounts(
-    BASE_URL,
-    getAccountsEndpoint,
-    base64data
-  );
-  const correctAccount = accounts?.data?.filter(
-    (item: any) => item.user.id === account?.id
-  );
-
-  return correctAccount;
-};
 export async function SocialsCart() {
+  const session = await getServerSession();
   const isPhylloId = await checkUserPhylloIdStatus();
   const { responseSDK, user } = await editSocials();
-  const socialAccountData = await getSocialAccountMain();
+  const socialAccountData = await getSocialAccountMain(
+    session?.user?.email as string
+  );
   return (
     <div>
       {!isPhylloId ? (

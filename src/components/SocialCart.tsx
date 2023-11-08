@@ -25,7 +25,7 @@ export async function SocialCart({ listings }: { listings: Listings }) {
   const listingTasks = await getListingTasks(listings.id);
   //  in here create an array to database, insta fb etc. Add what needs to be made. Maybe make a new table with TASKS?
   return (
-    <Card className="md:w-4/6 w-full h-full">
+    <Card className=" h-full">
       <CardHeader className="pb-3">
         <CardTitle>Tasks</CardTitle>
         <CardDescription>

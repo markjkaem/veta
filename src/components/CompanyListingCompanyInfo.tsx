@@ -67,7 +67,7 @@ const getRole = async () => {
     .select({ role: users.role })
     .from(users)
     .where(eq(users.email, session?.user?.email as string));
-  return role[0].role;
+  return role[0]?.role;
 };
 
 export async function CompanyListingCompanyInfo({
@@ -82,7 +82,7 @@ export async function CompanyListingCompanyInfo({
 
   return (
     <Card className="w-full">
-      <CardHeader className="grid grid-cols-[1fr_110px] items-start gap-4 space-y-0">
+      <CardHeader className="grid items-start gap-4 space-y-0">
         <div className="space-y-1">
           <CardTitle className="flex items-center gap-4">
             <Image
@@ -100,13 +100,14 @@ export async function CompanyListingCompanyInfo({
           <CardDescription>{companyProfile?.bio}</CardDescription>
           <CardDescription>
             {" "}
-            <span className="w-80 mt-4 grid lg:grid-cols-3 md:gap-6 grid-cols-2 gap-6">
+            <span className="mt-4 w-full grid lg:grid-cols-3 md:gap-4 grid-cols-2 gap-4">
               {selectedCategories?.map((category, index) => {
                 return (
-                  <span key={index}>
-                    <span className="py-2 px-1 bg-[#F472B6] rounded-sm  text-white font-bold font-inter">
-                      {category}
-                    </span>
+                  <span
+                    key={index}
+                    className="flex w-full py-2 px-1 bg-[#F472B6] rounded-sm  text-white font-bold font-inter"
+                  >
+                    {category}
                   </span>
                 );
               })}

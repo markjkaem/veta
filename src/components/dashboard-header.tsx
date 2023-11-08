@@ -14,7 +14,7 @@ const getRole = async () => {
     .select({ role: users.role })
     .from(users)
     .where(eq(users.email, session?.user?.email as string));
-  return role[0].role;
+  return role[0]?.role;
 };
 async function DashboardHeader() {
   const role = await getRole();
