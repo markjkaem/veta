@@ -10,10 +10,6 @@ export const SUBSCRIPTION_PLAN_ID = "price_1OA0FlJ0Tu9paWkWv8iNbHFT"
 
 export const getCurrentSubscription = async (email: string) => {
    
-   
-
-  
-
     const user = await db
       .select({ stripe_id: users.stripe_id })
       .from(users)
