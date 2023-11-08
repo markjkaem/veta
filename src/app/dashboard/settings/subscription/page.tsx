@@ -72,11 +72,11 @@ export default async function SettingsSocialsPage() {
                 You are subscribed
               </h1>
               <p className="leading-7 [&:not(:first-child)]:mt-6">
-                "Welcome to our community! You're now part of our exclusive club
+                Welcome to our community! You re now part of our exclusive club
                 of subscribers. Get ready to unlock a world of benefits,
                 updates, and special offers. Thank you for choosing to stay
-                connected with us. We can't wait to share exciting content and
-                news with you."
+                connected with us. We cant wait to share exciting content and
+                news with you.
               </p>
               <form action={submit} className="mt-4">
                 {" "}
