@@ -58,9 +58,9 @@ export function UserNav({ role }: { role: "influencer" | "company" | null }) {
               <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
             </DropdownMenuItem>
           </Link>
-          <Link href="/dashboard/settings/billing">
+          <Link href="/dashboard/settings/subscription">
             <DropdownMenuItem>
-              Billing
+              Subscription
               <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
             </DropdownMenuItem>
           </Link>

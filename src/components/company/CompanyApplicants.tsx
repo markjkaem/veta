@@ -40,7 +40,7 @@ async function getData(): Promise<Applicant[]> {
       })
       .from(influencerProfiles)
       .where(eq(influencerProfiles.id, response[i]?.senderId as string));
-
+    console.log(row);
     const listingRow = await db
       .select({ listingId: campaigns.listingId })
       .from(campaigns)
