@@ -31,7 +31,7 @@ const checkRole = async () => {
     .from(users)
     .where(eq(users.email, session?.user?.email as string));
 
-  return response[0].role;
+  return response[0]?.role;
 };
 
 export default async function Page() {

@@ -17,6 +17,7 @@ import Link from "next/link";
 import db from "../../../drizzle/db";
 import { users } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -29,7 +30,7 @@ const getRole = async () => {
     .select({ role: users.role })
     .from(users)
     .where(eq(users.email, session?.user?.email as string));
-  return role[0].role;
+  return role[0]?.role;
 };
 
 const getBalance = async () => {
@@ -41,11 +42,14 @@ const getBalance = async () => {
     }
   );
   const user = await db
-    .select({ stripe_id: users.stripe_id })
+    .select({ stripe_id: users?.stripe_id })
     .from(users)
     .where(eq(users.email, session?.user?.email as string));
 
-  const response: any = await stripe.customers.retrieve(`${user[0].stripe_id}`);
+  const response: any = await stripe.customers.retrieve(
+    `${user[0]?.stripe_id}`
+  );
+
   const balance = response?.balance;
 
   return balance;

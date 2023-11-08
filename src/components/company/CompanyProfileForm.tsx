@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 
 import { PutBlobResult, put } from "@vercel/blob";
 import Image from "next/image";
+import Loading from "@/app/dashboard/loading";
 
 const profileFormSchema = z.object({
   alias: z
@@ -58,6 +59,8 @@ export function CompanyProfileForm(props: { companyData: CompanyData[] }) {
   const router = useRouter();
   const inputFileRef = useRef<HTMLInputElement>(null);
   const session = useSession();
+  const [isLoading, setIsLoading] = useState(false);
+
   const [categories, setCategories] = useState([
     { name: "Lifestyle", selected: false },
     { name: "Travel", selected: false },
@@ -104,6 +107,7 @@ export function CompanyProfileForm(props: { companyData: CompanyData[] }) {
   };
 
   async function onSubmit(data: ProfileFormValues) {
+    setIsLoading(true);
     const profilerows = await db
       .select()
       .from(companyProfiles)
@@ -131,6 +135,7 @@ export function CompanyProfileForm(props: { companyData: CompanyData[] }) {
           title: "Your profile was succesfully updated.",
         });
         router.push("/dashboard/settings/profile");
+        setIsLoading(false);
       } else {
         await db
           .update(companyProfiles)
@@ -147,6 +152,7 @@ export function CompanyProfileForm(props: { companyData: CompanyData[] }) {
           title: "Your profile was succesfully updated.",
         });
         router.push("/dashboard/settings/profile");
+        setIsLoading(false);
       }
     } else {
       console.log("file found");
@@ -165,6 +171,7 @@ export function CompanyProfileForm(props: { companyData: CompanyData[] }) {
           title: "Your profile was succesfully updated.",
         });
         router.push("/dashboard/settings/profile");
+        setIsLoading(false);
       } else {
         await db
           .update(companyProfiles)
@@ -182,12 +189,19 @@ export function CompanyProfileForm(props: { companyData: CompanyData[] }) {
           title: "Your profile was succesfully updated.",
         });
         router.push("/dashboard/settings/profile");
+        setIsLoading(false);
       }
     }
   }
 
   return (
     <div>
+      {isLoading && (
+        <div className="h-screen w-screen fixed top-0 left-0">
+          <Loading />
+        </div>
+      )}
+
       <div className="space-y-2 mt-4 md:w-8/12 w-11/12">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

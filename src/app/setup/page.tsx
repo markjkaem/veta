@@ -74,7 +74,7 @@ export default function AccountForm() {
 
     //  Create stripe account
     const response = await db
-      .select({ stripe_id: users.stripe_id })
+      .select({ stripe_id: users?.stripe_id })
       .from(users)
       .where(eq(users.email, session.data?.user?.email as string));
 
@@ -89,7 +89,7 @@ export default function AccountForm() {
         .set({ stripe_id: customer.id })
         .where(eq(users.email, session.data?.user?.email as string));
     } else {
-      customer = { id: response[0].stripe_id };
+      customer = { id: response[0]?.stripe_id };
     }
     toast({
       title: "Your account was succesfully created.",
