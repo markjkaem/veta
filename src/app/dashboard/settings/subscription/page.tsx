@@ -16,7 +16,7 @@ const getRole = async (session: Session) => {
   return role[0]?.role;
 };
 
-const useSubscriptionData = async () => {
+const getSubscriptionData = async () => {
   const session = await getServerSession();
   const stripe = new Stripe(
     "sk_test_51L34nrJ0Tu9paWkW9sF0gCPGB55l3fncgRlFJmF2Lcr4xEUdCMuUtQnYang1GsxdZAmw9AaTC6vHgJHPhNMAsDDA000WqYNd73",
@@ -51,7 +51,7 @@ const useSubscriptionData = async () => {
 
 const submit = async () => {
   "use server";
-  const response = await useSubscriptionData();
+  const response = await getSubscriptionData();
   redirect(response.url);
 };
 
