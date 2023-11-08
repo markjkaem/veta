@@ -19,7 +19,6 @@ export default async function middleware(req: NextRequest) {
   });
 
   const isSubscribed = await getCurrentSubscription(session?.email as string);
-  console.log(isSubscribed)
 
   const role = await getRole(session);
 
