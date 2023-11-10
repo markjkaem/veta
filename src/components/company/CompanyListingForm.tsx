@@ -28,6 +28,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { PutBlobResult } from "@vercel/blob";
+import { useRef } from "react";
 
 const profileFormSchema = z.object({
   title: z
@@ -53,6 +55,7 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 export function CompanyListingForm() {
   const router = useRouter();
   const session = useSession();
+  const inputFileRef = useRef<HTMLInputElement>(null);
 
   const defaultValues: Partial<ProfileFormValues> = {
     title: "",
@@ -67,12 +70,29 @@ export function CompanyListingForm() {
     mode: "onChange",
   });
 
+
+  const createBlobFile = async (file: File) => {
+    const response = await fetch(`/api/avatar/upload?filename=${file.name}`, {
+      method: "POST",
+      body: file,
+    });
+
+    const newBlob = (await response.json()) as PutBlobResult;
+    return newBlob;
+  };
+  
   const { fields, append } = useFieldArray({
     name: "tasks",
     control: form.control,
   });
 
   async function onSubmit(data: ProfileFormValues) {
+    if(!inputFileRef?.current?.files){
+      throw new Error("No file was seleced")
+    }
+
+    const file = inputFileRef.current.files[0];
+    const newBlob = await createBlobFile(file);
     const listing = await db
       .insert(listings)
       .values({
@@ -80,6 +100,7 @@ export function CompanyListingForm() {
         description: data.description,
         briefing: data.briefing,
         email: session.data?.user?.email as string,
+        banner: newBlob.url as string
       })
       .returning();
 
@@ -105,6 +126,8 @@ export function CompanyListingForm() {
       <div className="space-y-2 mt-4 md:w-8/12 w-11/12">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+       
+          <input name="file" ref={inputFileRef} type="file" />
             <FormField
               control={form.control}
               name="title"

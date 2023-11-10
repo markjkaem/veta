@@ -89,16 +89,12 @@ function CompanyListings({
                     <Separator className="my-4" />
                     <div className="relative">
                       <ScrollArea>
-                        <div className="flex space-x-4 pb-4">
+                        <div className="grid md:grid-cols-3 grid-cols-1 gap-4 pb-4">
                           {listings.map((listing, i) => (
                             <MyListings
                               key={i}
-                              profile={profile}
                               listings={listing}
-                              className="w-[150px]"
-                              aspectRatio="square"
-                              width={150}
-                              height={150}
+                           
                             />
                           ))}
                         </div>

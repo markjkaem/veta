@@ -39,6 +39,7 @@ export const listings = pgTable("listings", {
   description: text("description"),
   briefing: text("briefing"),
   email: text("email"),
+  banner: text("banner")
 })
 
 export const listingsTasks = pgTable("listingTask", {

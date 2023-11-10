@@ -43,15 +43,12 @@ function CompanyMarketplace({ items }: { items: Listings[] }) {
                     <Separator className="my-4" />
                     <div className="relative">
                       <ScrollArea>
-                        <div className="flex space-x-4 pb-4">
+                      <div className="grid md:grid-cols-3 grid-cols-1 gap-4 pb-4">
                           {items.map((company, i) => (
                             <CompanyMainMarketplace
                               key={i}
                               listings={company}
-                              className="w-[150px]"
-                              aspectRatio="square"
-                              width={150}
-                              height={150}
+                             
                             />
                           ))}
                         </div>
