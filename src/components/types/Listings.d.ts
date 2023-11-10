@@ -4,6 +4,8 @@ export interface Listings {
     description: string | null;
     briefing: string | null;
     email: string | null;
+    banner: string | null
+
   }
 
   export interface ListingTasks {

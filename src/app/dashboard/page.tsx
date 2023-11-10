@@ -12,10 +12,10 @@ import { Overview } from "@/components/ui/overview";
 import { RecentSales } from "@/components/ui/recent-sales";
 import DashboardHeader from "@/components/dashboard-header";
 import Stripe from "stripe";
-import { getServerSession } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import Link from "next/link";
 import db from "../../../drizzle/db";
-import { users } from "../../../drizzle/schema";
+import { campaignMessages, companyProfiles, influencerProfiles, listings, users } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
@@ -33,8 +33,7 @@ const getRole = async () => {
   return role[0]?.role;
 };
 
-const getBalance = async () => {
-  const session = await getServerSession();
+const getBalance = async (session: Session) => {
   const stripe = new Stripe(
     "***REMOVED***",
     {
@@ -55,9 +54,43 @@ const getBalance = async () => {
   return balance;
 };
 
+const getListingAmount = async (session: Session): Promise<number> => {
+  const response = await db.select({ id: listings.id }).from(listings).where(eq(listings.email, session.user?.email as string))
+  const length = response.length
+  return length
+}
+
+const getProfileID = async (session: Session) => {
+  const response = await db
+    .select({ id: companyProfiles.id })
+    .from(companyProfiles)
+    .where(eq(companyProfiles.email, session?.user?.email as string));
+  return response[0].id
+}
+
+const getSenderInfo = async (response: { id: string }[]) => {
+  let array = []
+  for (let i = 0; i < response.length; i++){
+  const data = await db.select({ id: influencerProfiles.id, alias: influencerProfiles.alias, email: influencerProfiles.email, image: influencerProfiles.image }).from(influencerProfiles).where(eq(influencerProfiles.id, response[i].id as string))
+  array.push(data[0])
+  }
+  return array.reverse()
+  }
+
+const getApplicants = async (session: Session) => {
+  const id = await getProfileID(session)
+  const response = await db.select({ id: campaignMessages.senderId }).from(campaignMessages).where(eq(campaignMessages.receiverId, id as string))
+  const sender = await getSenderInfo(response as any)
+  return { length: response.length, applicants: sender }
+}
+
+
 export default async function DashboardPage() {
-  const balance = await getBalance();
+  const session = await getServerSession();
+  const balance = await getBalance(session as Session);
   const role = await getRole();
+  const listingAmount = await getListingAmount(session as Session)
+  const applicantInfo = await getApplicants(session as Session)
   return (
     <>
       <DashboardHeader />
@@ -135,16 +168,16 @@ export default async function DashboardPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+10</div>
+                  <div className="text-2xl font-bold">+{applicantInfo.length}</div>
                   <p className="text-xs text-muted-foreground">
-                    My connections
+                    My applicants
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Campaigns
+                    Listings
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -161,8 +194,8 @@ export default async function DashboardPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+2</div>
-                  <p className="text-xs text-muted-foreground">My campaigns</p>
+                  <div className="text-2xl font-bold">+{listingAmount}</div>
+                  <p className="text-xs text-muted-foreground">My listings</p>
                 </CardContent>
               </Card>
               <Card>
@@ -202,13 +235,13 @@ export default async function DashboardPage() {
               </Card>
               <Card className="col-span-3">
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
+                  <CardTitle>New applicants</CardTitle>
                   <CardDescription>
-                    You made 265 sales this month.
+                    People that may want to join your campaigns.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <RecentSales />
+                  <RecentSales applicants={applicantInfo.applicants as any} />
                 </CardContent>
               </Card>
             </div>

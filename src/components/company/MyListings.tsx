@@ -1,40 +1,21 @@
 import Image from "next/image";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 
 import { cn } from "@/lib/utils";
 import {
   ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuSeparator,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 
 import { playlists } from "@/helpers/playlists";
 import Link from "next/link";
 import db from "../../../drizzle/db";
-import { companyProfiles, listingsTasks } from "../../../drizzle/schema";
+import {  listingsTasks } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { Listings } from "../types/Listings";
 
-interface CompanyProfile {
-  id: string;
-  alias: string | null;
-  url: string | null;
-  email: string | null;
-  bio: string | null;
-  categories: string | null;
-  countries: string | null;
-  genders: string | null;
-  image: string | null;
-}
 
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   listings: Listings;
-  profile: CompanyProfile;
   aspectRatio?: "portrait" | "square";
   width?: number;
   height?: number;
@@ -50,9 +31,7 @@ const getListingTasks = async (id: string) => {
 
 export async function MyListings({
   listings,
-  profile,
   aspectRatio = "portrait",
-  width,
   height,
   className,
   ...props
@@ -63,18 +42,16 @@ export async function MyListings({
       <ContextMenu>
         <ContextMenuTrigger>
           <div className="overflow-hidden rounded-md">
-            {profile.image ? (
+            {listings.banner ? (
               <Link href={`/dashboard/campaigns/listings/${listings.id}`}>
                 <Image
-                  src={profile?.image as string}
-                  alt={profile?.alias as string}
-                  width={width}
-                  height={height}
+                  src={listings?.banner as string}
+                  alt={listings?.title as string}
+                  width={800}
+                  height={800}
                   className={cn(
-                    "h-auto w-auto object-cover transition-all hover:scale-105",
-                    aspectRatio === "portrait"
-                      ? "aspect-[3/4]"
-                      : "aspect-square"
+                    " w-full h-40 object-cover transition-all hover:scale-105",
+                    
                   )}
                 />
               </Link>
@@ -82,14 +59,11 @@ export async function MyListings({
               <Link href={`/dashboard/campaigns/listings/${listings.id}`}>
                 <Image
                   src={"/veta-template.jpg"}
-                  alt={profile?.alias as string}
-                  width={width}
-                  height={height}
+                  alt={listings.title as string}
+                  width={800}
+                  height={800}
                   className={cn(
-                    "h-auto w-auto object-cover transition-all hover:scale-105",
-                    aspectRatio === "portrait"
-                      ? "aspect-[3/4]"
-                      : "aspect-square"
+                    " w-full h-40 object-cover transition-all hover:scale-105",
                   )}
                 />
               </Link>
@@ -97,14 +71,16 @@ export async function MyListings({
             <div className="absolute z-10 bottom-20 space-y-1 text-sm">
               <div className="flex -space-x-4">
                 {listingTasks
-                  .filter((item, index) => index < 3)
+                  .filter((__, index) => index < 3)
                   .map((item, index) => {
                     return (
-                      <img
+                      <Image
                         key={index}
                         className="w-10 h-10 border-2 border-white bg-white p-1 rounded-full dark:border-gray-800"
                         src={`/platforms/${item.platform}.png`}
-                        alt=""
+                        alt="platform"
+                        height={200}
+                        width={200}
                       />
                     );
                   })}
