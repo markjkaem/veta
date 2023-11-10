@@ -35,12 +35,12 @@ export function CompanyListingInfo({ listings }: { listings: Listings }) {
       <CardHeader className="grid grid-cols-[1fr_110px] items-start gap-4 space-y-0">
         <div className="space-y-1">
           <CardTitle>{listings?.title}</CardTitle>
-          <CardDescription>{listings.description}</CardDescription>
+          <CardDescription>{listings?.description}</CardDescription>
         </div>
       </CardHeader>
       <CardContent>
         <div className="flex space-x-4 text-sm text-muted-foreground">
-          <p>{listings.briefing}</p>
+          <p>{listings?.briefing}</p>
         </div>
       </CardContent>
       {/* <CardContent>

@@ -15,9 +15,8 @@ import Stripe from "stripe";
 import { Session, getServerSession } from "next-auth";
 import Link from "next/link";
 import db from "../../../drizzle/db";
-import { campaignMessages, companyProfiles, influencerProfiles, listings, users } from "../../../drizzle/schema";
-import { eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
+import { campaignMessages, campaigns, companyProfiles, influencerProfiles, listings, users } from "../../../drizzle/schema";
+import { eq, asc, desc } from "drizzle-orm";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -60,26 +59,56 @@ const getListingAmount = async (session: Session): Promise<number> => {
   return length
 }
 
+const getCreatorInfo = async (response: { companyId: string |null }[]) => {
+  let array = []
+  for (let i = 0; i < response.length; i++) {
+    const data = await db.select({ id: companyProfiles.id, alias: companyProfiles.alias, email: companyProfiles.email, image: companyProfiles.image }).from(companyProfiles).where(eq(companyProfiles.id, response[i].companyId as string))
+    array.push(data[0])
+  }
+  return array
+}
+
+const getAllListings = async () => {
+  const response = await db.select({ companyId: campaigns.companyId }).from(campaigns).orderBy(desc(campaigns.timestamp)).limit(5)
+  const creator = await getCreatorInfo(response)
+  const length = response.length
+  return {length: length, listings: creator}
+}
+
+const getInfluencerProfileID = async (session: Session) => {
+  const response = await db
+    .select({ id: influencerProfiles.id })
+    .from(influencerProfiles)
+    .where(eq(influencerProfiles.email, session?.user?.email as string));
+  return response[0]?.id
+}
+
+const getListingRequests = async (session: Session): Promise<number> => {
+  const profileId = await getInfluencerProfileID(session as Session)
+  const response = await db.select({ id: campaignMessages.id }).from(campaignMessages).where(eq(campaignMessages.senderId, profileId))
+  return response.length
+}
+
 const getProfileID = async (session: Session) => {
   const response = await db
     .select({ id: companyProfiles.id })
     .from(companyProfiles)
     .where(eq(companyProfiles.email, session?.user?.email as string));
-  return response[0].id
+  return response[0]?.id
 }
 
 const getSenderInfo = async (response: { id: string }[]) => {
   let array = []
-  for (let i = 0; i < response.length; i++){
-  const data = await db.select({ id: influencerProfiles.id, alias: influencerProfiles.alias, email: influencerProfiles.email, image: influencerProfiles.image }).from(influencerProfiles).where(eq(influencerProfiles.id, response[i].id as string))
-  array.push(data[0])
+  for (let i = 0; i < response.length; i++) {
+    const data = await db.select({ id: influencerProfiles.id, alias: influencerProfiles.alias, email: influencerProfiles.email, image: influencerProfiles.image }).from(influencerProfiles).where(eq(influencerProfiles.id, response[i].id as string))
+    array.push(data[0])
   }
   return array.reverse()
-  }
+}
 
 const getApplicants = async (session: Session) => {
   const id = await getProfileID(session)
-  const response = await db.select({ id: campaignMessages.senderId }).from(campaignMessages).where(eq(campaignMessages.receiverId, id as string))
+  const response = await db.select({ id: campaignMessages.senderId }).from(campaignMessages).where(eq(campaignMessages.receiverId, id as string)).limit(5)
   const sender = await getSenderInfo(response as any)
   return { length: response.length, applicants: sender }
 }
@@ -87,10 +116,18 @@ const getApplicants = async (session: Session) => {
 
 export default async function DashboardPage() {
   const session = await getServerSession();
-  const balance = await getBalance(session as Session);
-  const role = await getRole();
-  const listingAmount = await getListingAmount(session as Session)
-  const applicantInfo = await getApplicants(session as Session)
+
+  const promises = [
+    getBalance(session as Session),
+    getRole(),
+    getListingAmount(session as Session),
+    getListingRequests(session as Session),
+    getApplicants(session as Session),
+    getAllListings()
+  ];
+  
+  // Using Promise.all to wait for all promises to resolve
+  const [balance, role, listingAmount, listingRequests, applicantInfo, allListings] = await Promise.all(promises);
   return (
     <>
       <DashboardHeader />
@@ -149,9 +186,12 @@ export default async function DashboardPage() {
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
+                {role === "company" && <CardTitle className="text-sm font-medium">
                     Connections
-                  </CardTitle>
+                  </CardTitle>}
+                  {role === "influencer" && <CardTitle className="text-sm font-medium">
+                    Requests
+                  </CardTitle>}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -167,18 +207,24 @@ export default async function DashboardPage() {
                     <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
                   </svg>
                 </CardHeader>
-                <CardContent>
+                {role === "company" &&<CardContent>
                   <div className="text-2xl font-bold">+{applicantInfo.length}</div>
                   <p className="text-xs text-muted-foreground">
                     My applicants
                   </p>
-                </CardContent>
+                </CardContent>}
+                {role === "influencer" &&  <CardContent>
+                  <div className="text-2xl font-bold">+{listingRequests}</div>
+                  <p className="text-xs text-muted-foreground">My requests</p>
+                </CardContent>}
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+
                   <CardTitle className="text-sm font-medium">
                     Listings
                   </CardTitle>
+                  
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -193,10 +239,15 @@ export default async function DashboardPage() {
                     <path d="M2 10h20" />
                   </svg>
                 </CardHeader>
-                <CardContent>
+                {role === "company" &&  <CardContent>
                   <div className="text-2xl font-bold">+{listingAmount}</div>
                   <p className="text-xs text-muted-foreground">My listings</p>
-                </CardContent>
+                </CardContent>}
+                {role === "influencer" &&  <CardContent>
+                  <div className="text-2xl font-bold">+{allListings.length}</div>
+                  <p className="text-xs text-muted-foreground">Open listings</p>
+                </CardContent>}
+                
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -235,13 +286,20 @@ export default async function DashboardPage() {
               </Card>
               <Card className="col-span-3">
                 <CardHeader>
-                  <CardTitle>New applicants</CardTitle>
-                  <CardDescription>
+                  {role === "company" && <CardTitle>New applicants</CardTitle>}
+                  {role === "influencer" && <CardTitle>New listings</CardTitle>}
+
+                  {role === "company" && <CardDescription>
                     People that may want to join your campaigns.
-                  </CardDescription>
+                  </CardDescription>}
+                  {role === "influencer" && <CardDescription>
+                    Listings that you may want to join.
+                  </CardDescription>}
                 </CardHeader>
                 <CardContent>
-                  <RecentSales applicants={applicantInfo.applicants as any} />
+                 {role === "company" && <RecentSales link={`/dashboard/marketplace/influencers/`} users={applicantInfo.applicants as any} />}
+                  {role === "influencer" && <RecentSales link={`/dashboard/campaigns/listings/`} users={allListings.listings as any} />}
+                  
                 </CardContent>
               </Card>
             </div>
