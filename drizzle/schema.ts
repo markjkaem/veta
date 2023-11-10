@@ -54,7 +54,8 @@ export const campaigns = pgTable("campaign", {
   listingId: text("listingId"),
   companyId: text("companyId"),
   influencerId: text("influencerId"),
-  isActive: boolean("isActive").default(false)
+  isActive: boolean("isActive").default(false),
+  timestamp: timestamp('timestamp').defaultNow(),
 })
 
 export const campaignMessages = pgTable("campaignmessage", {

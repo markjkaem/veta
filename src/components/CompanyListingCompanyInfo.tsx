@@ -76,7 +76,7 @@ export async function CompanyListingCompanyInfo({
   listings: Listings;
 }) {
   const role = await getRole();
-  const companyProfile = await getCompanyProfile(listings.email as string);
+  const companyProfile = await getCompanyProfile(listings?.email as string);
   const influencerProfile = await getInfluencerProfile();
   const selectedCategories = companyProfile?.categories?.split(",");
 
@@ -118,9 +118,9 @@ export async function CompanyListingCompanyInfo({
       <CardContent>
         {role === "influencer" && (
           <ApplyPopoverButtonInfluencer
-            listingsId={listings.id}
-            companyId={companyProfile.id}
-            influencerId={influencerProfile.influencerId}
+            listingsId={listings?.id}
+            companyId={companyProfile?.id}
+            influencerId={influencerProfile?.influencerId}
           />
         )}
       </CardContent>
