@@ -58,7 +58,6 @@ export function InfluencerDataTable<TData, TValue>({
               <TableHead className="w-20">Company</TableHead>
               {headerGroup.headers.map((header) => {
                 return (
-                  <>
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
@@ -67,7 +66,7 @@ export function InfluencerDataTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  </>
+                  
                 );
               })}
               <TableHead className="w-20">Campaign</TableHead>
@@ -152,7 +151,7 @@ export function InfluencerDataTable<TData, TValue>({
                       <AlertDialogTrigger asChild>
                         <Button variant="outline">View</Button>
                       </AlertDialogTrigger>
-                      <AlertDialogContent>
+                      <AlertDialogContent  >
                         <AlertDialogHeader>
                           <AlertDialogTitle>
                             <div className="flex gap-2 items-center ">

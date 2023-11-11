@@ -10,7 +10,7 @@ import { Listings } from "../types/Listings";
 
 function CompanyMarketplace({ items }: { items: Listings[] }) {
   return (
-    <div className="hidden md:block">
+    <div className="md:block">
       {/* <Menu /> */}
       <div className="border-t">
         <div className="bg-background">
