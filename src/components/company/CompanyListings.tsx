@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Sidebar } from "../ui/sidebar";
 import { playlists } from "@/helpers/playlists";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
@@ -90,13 +90,15 @@ function CompanyListings({
                     <div className="relative">
                       <ScrollArea>
                         <div className="grid md:grid-cols-3 grid-cols-1 gap-4 pb-4">
-                          {listings.map((listing, i) => (
+                          <Suspense fallback={<div>Loading</div>}>
+                            {listings.map((listing, i) => (
                             <MyListings
                               key={i}
                               listings={listing}
                            
                             />
                           ))}
+                          </Suspense>
                         </div>
                         <ScrollBar orientation="horizontal" />
                       </ScrollArea>
