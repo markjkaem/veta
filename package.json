@@ -43,7 +43,7 @@
     "drizzle-orm": "^0.27.2",
     "drizzle-zod": "^0.4.4",
     "lucide-react": "^0.290.0",
-    "next": "14.0.0",
+    "next": "14.0.3-canary.2",
     "next-auth": "^4.24.4",
     "next-themes": "^0.2.1",
     "pg": "^8.11.2",
