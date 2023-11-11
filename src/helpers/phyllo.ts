@@ -44,6 +44,7 @@ export const generateUuid = (): string => {
         },
       });
       const data = await response.json();
+      
       return data;
     };
   
@@ -102,7 +103,6 @@ export const generateUuid = (): string => {
         return account;
       }
     };
-    const session = await getServerSession();
     const account = await getSocialAccount(email);
   
     const base64data = await createBuffer();
