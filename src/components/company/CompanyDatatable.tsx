@@ -106,14 +106,9 @@ export function CompanyDataTable<TData, TValue>({
                     ))}
                     <TableCell>
                       <HoverCard>
-                        <HoverCardTrigger>
-                          <Link
-                            /* @ts-ignore */
-                            href={`/dashboard/campaigns/listings/${row.original.listingId}`}
-                            className="font-semibold hover:underline hover:cursor-pointer"
-                          >
-                            Info
-                          </Link>
+                       {/* @ts-ignore */}
+                        <HoverCardTrigger href={`/dashboard/campaigns/listings/${row.original.listingId}`}>
+                         
                         </HoverCardTrigger>
                         <HoverCardContent className="w-96">
                           <Link
