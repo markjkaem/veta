@@ -19,7 +19,7 @@ interface Item {
 
 function InfluencerMarketplace({ items }: { items: Item[] }) {
   return (
-    <div className="hidden md:block">
+    <div className=" md:block">
       {/* <Menu /> */}
       <div className="border-t">
         <div className="bg-background">
@@ -50,9 +50,9 @@ function InfluencerMarketplace({ items }: { items: Item[] }) {
                       </p>
                     </div>
                     <Separator className="my-4" />
-                    <div className="relative">
+                    <div className="relative flex md:justify-normal justify-center">
                       <ScrollArea>
-                        <div className="flex space-x-4 pb-4">
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 pb-4">
                           {items.map((influencer, i) => (
                             <InfluencerMainMarketplace
                               key={i}
