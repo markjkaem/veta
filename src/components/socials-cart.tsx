@@ -167,11 +167,12 @@ const checkUserPhylloIdStatus = async () => {
 
 export async function SocialsCart() {
   const session = await getServerSession();
-  const isPhylloId = await checkUserPhylloIdStatus();
-  const { responseSDK, user } = await editSocials();
-  const socialAccountData = await getSocialAccountMain(
-    session?.user?.email as string
-  );
+  const promises = [checkUserPhylloIdStatus(),
+    editSocials(),
+    getSocialAccountMain(
+      session?.user?.email as string
+    )]
+  const [isPhylloId, { responseSDK, user }, socialAccountData ] = await Promise.all(promises);
   return (
     <div>
       {!isPhylloId ? (
