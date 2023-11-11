@@ -46,7 +46,7 @@ export default async function MusicPage({
         <div className="border-t">
           {listings?.banner ? <div className="w-screen h-40 mt-6">
             <Image className="w-10/12 h-40 mx-auto object-cover" src={listings?.banner as string} width={1000} alt={listings?.title as string} height={200} />
-            </div> :   <Image className="w-10/12 h-40 mx-auto object-cover" src={"/veta-template.jpg"} width={1000} alt={listings?.title as string} height={200} /> }
+            </div> : <Image className="w-10/12 h-40 mx-auto object-cover" src={"/veta-template.jpg"} width={1000} alt={listings?.title as string} height={200} /> }
 
           <div className="p-4 grid md:grid-cols-2 w-max-screen gap-4 grid-cols-1">
             <CompanyListingInfo listings={listings} />

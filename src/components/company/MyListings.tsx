@@ -6,12 +6,13 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 
-import { playlists } from "@/helpers/playlists";
 import Link from "next/link";
 import db from "../../../drizzle/db";
-import {  listingsTasks } from "../../../drizzle/schema";
+import { listingsTasks } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { Listings } from "../types/Listings";
+import DetailsDropdown from "../details-dropdown";
+
 
 
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -41,8 +42,10 @@ export async function MyListings({
     <div className={cn("space-y-3 relative", className)} {...props}>
       <ContextMenu>
         <ContextMenuTrigger>
-          <div className="overflow-hidden rounded-md">
-            {listings.banner ? (
+          <div className="relative rounded-md">
+            <DetailsDropdown id={listings.id} />
+
+            {listings?.banner ? (
               <Link href={`/dashboard/campaigns/listings/${listings.id}`}>
                 <Image
                   src={listings?.banner as string}
@@ -51,7 +54,7 @@ export async function MyListings({
                   height={800}
                   className={cn(
                     " w-full h-40 object-cover transition-all hover:scale-105",
-                    
+
                   )}
                 />
               </Link>
@@ -68,7 +71,7 @@ export async function MyListings({
                 />
               </Link>
             )}
-            <div className="absolute z-10 bottom-20 space-y-1 text-sm">
+            <div className="absolute z-10 bottom-0 space-y-1 text-sm">
               <div className="flex -space-x-4">
                 {listingTasks
                   .filter((__, index) => index < 3)
@@ -76,7 +79,7 @@ export async function MyListings({
                     return (
                       <Image
                         key={index}
-                        className="w-10 h-10 border-2 border-white bg-white p-1 rounded-full dark:border-gray-800"
+                        className="w-10 h-10 border-1 border-white bg-white p-0.5 rounded-full dark:border-gray-800"
                         src={`/platforms/${item.platform}.png`}
                         alt="platform"
                         height={200}

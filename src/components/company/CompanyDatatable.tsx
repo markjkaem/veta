@@ -59,7 +59,7 @@ export function CompanyDataTable<TData, TValue>({
               <TableHead className="w-20">Avatar</TableHead>
               {headerGroup.headers.map((header) => {
                 return (
-                  <>
+                  
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
@@ -68,7 +68,7 @@ export function CompanyDataTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  </>
+                  
                 );
               })}
               <TableHead className="w-20">Campaign</TableHead>
@@ -82,7 +82,6 @@ export function CompanyDataTable<TData, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => {
               return (
-                <>
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
@@ -191,7 +190,7 @@ export function CompanyDataTable<TData, TValue>({
                       </AlertDialog>
                     </TableCell>
                   </TableRow>
-                </>
+                
               );
             })
           ) : (

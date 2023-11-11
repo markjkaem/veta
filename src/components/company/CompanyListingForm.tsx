@@ -30,6 +30,7 @@ import {
 } from "../ui/select";
 import { PutBlobResult } from "@vercel/blob";
 import { useRef } from "react";
+import { revalidatePath } from "next/cache";
 
 const profileFormSchema = z.object({
   title: z
@@ -72,7 +73,7 @@ export function CompanyListingForm() {
 
 
   const createBlobFile = async (file: File) => {
-    const response = await fetch(`/api/avatar/upload?filename=${file.name}`, {
+    const response = await fetch(`/api/avatar/upload?filename=${file?.name}`, {
       method: "POST",
       body: file,
     });
@@ -87,7 +88,8 @@ export function CompanyListingForm() {
   });
 
   async function onSubmit(data: ProfileFormValues) {
-    if(!inputFileRef?.current?.files){
+    //@ts-ignore
+    if(!inputFileRef.current?.files[0]){
       throw new Error("No file was seleced")
     }
 
@@ -118,7 +120,7 @@ export function CompanyListingForm() {
     toast({
       title: "Your listing was succesfully created.",
     });
-    router.push("/dashboard/campaigns");
+  router.refresh()
   }
 
   return (
@@ -126,8 +128,8 @@ export function CompanyListingForm() {
       <div className="space-y-2 mt-4 md:w-8/12 w-11/12">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-       
-          <input name="file" ref={inputFileRef} type="file" />
+       <p className="text-sm text-muted-foreground text-black font-semibold dark:text-gray-300">Banner</p>
+          <input  required name="file" ref={inputFileRef} type="file" />
             <FormField
               control={form.control}
               name="title"
