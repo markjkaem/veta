@@ -120,7 +120,6 @@ export function InfluencerProfileForm(props: { profileData: ProfileData[] }) {
     };
     const categoryString = createCategoryString();
     if (!inputFileRef?.current?.files![0]?.name) {
-      console.log("no file found");
       if (!isProfile) {
         await db.insert(influencerProfiles).values({
           alias: data.alias,
@@ -153,7 +152,6 @@ export function InfluencerProfileForm(props: { profileData: ProfileData[] }) {
         setIsLoading(false);
       }
     } else {
-      console.log("file found");
       const file = inputFileRef.current.files[0];
       const newBlob = await createBlobFile(file);
       if (!isProfile) {

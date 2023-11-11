@@ -9,7 +9,6 @@ import { redirect } from "next/navigation";
 
 export async function accountAction(formData: FormData) {
   const session = await getServerSession()
-  console.log(formData)
     const firstname = formData.get("firstname")?.toString();
     const lastname = formData.get("lastname")?.toString();
     const gender = formData.get("gender")?.toString();

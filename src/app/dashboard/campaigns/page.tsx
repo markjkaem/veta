@@ -5,8 +5,10 @@ import { companyProfiles, listings, users } from "../../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
 import InfluencerListings from "@/components/influencer/InfluencerListings";
+import { unstable_noStore } from "next/cache";
 
 const getListings = async () => {
+  unstable_noStore()
   const session = await getServerSession();
   const response = await db
     .select()
