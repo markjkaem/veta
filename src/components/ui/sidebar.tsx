@@ -1,12 +1,9 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Playlist } from "@/helpers/playlists";
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  playlists: Playlist[];
-}
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function Sidebar({ className, playlists }: SidebarProps) {
+export function Sidebar({ className }: SidebarProps) {
   return (
     <div className={cn("pb-12", className)}>
       <div className="space-y-4 py-4">

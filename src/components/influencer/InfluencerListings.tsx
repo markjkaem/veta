@@ -1,6 +1,5 @@
 import React from "react";
 import { Sidebar } from "../ui/sidebar";
-import { playlists } from "@/helpers/playlists";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Separator } from "../ui/separator";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";

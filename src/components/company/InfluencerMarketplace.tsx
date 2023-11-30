@@ -1,6 +1,5 @@
 import React from "react";
 import { Sidebar } from "../ui/sidebar";
-import { playlists } from "@/helpers/playlists";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Separator } from "../ui/separator";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
@@ -24,7 +23,7 @@ function InfluencerMarketplace({ items }: { items: Item[] }) {
       <div className="border-t">
         <div className="bg-background">
           <div className="grid lg:grid-cols-5">
-            <Sidebar playlists={playlists} className="hidden lg:block" />
+            <Sidebar className="hidden lg:block" />
             <div className="col-span-3 lg:col-span-4 lg:border-l">
               <div className="h-full px-4 py-6 lg:px-8">
                 <Tabs defaultValue="music" className="h-full space-y-6">
