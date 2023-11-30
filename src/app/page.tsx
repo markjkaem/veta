@@ -1,8 +1,8 @@
 import Companies from "@/components/companies";
 import Header from "@/components/header";
-import Hero from "@/components/hero";
 import Pricing from "@/components/pricing";
 import Services from "@/components/services";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -10,11 +10,13 @@ export default function Home() {
       <div>
         <Header />
       </div>
-      <Hero />
-      <div className="container-center container-spacing-xl container">
-        <Services />
-      </div>
-      <Pricing />
+      <div className="h-40"></div>
+      <Link
+        className="bg-pink-400 text-white rounded-sm py-3 px-5 no-underline hover:bg-pink-500 transition"
+        href="/sign-in"
+      >
+        Test signIn
+      </Link>
       <Companies />
     </main>
   );

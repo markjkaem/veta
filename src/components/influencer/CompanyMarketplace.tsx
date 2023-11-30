@@ -1,6 +1,5 @@
 import React from "react";
 import { Sidebar } from "../ui/sidebar";
-import { playlists } from "@/helpers/playlists";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Separator } from "../ui/separator";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
@@ -15,7 +14,7 @@ function CompanyMarketplace({ items }: { items: Listings[] }) {
       <div className="border-t">
         <div className="bg-background">
           <div className="grid lg:grid-cols-5">
-            <Sidebar playlists={playlists} className="hidden lg:block" />
+            <Sidebar className="hidden lg:block" />
             <div className="col-span-3 lg:col-span-4 lg:border-l">
               <div className="h-full px-4 py-6 lg:px-8">
                 <Tabs defaultValue="music" className="h-full space-y-6">
@@ -43,12 +42,11 @@ function CompanyMarketplace({ items }: { items: Listings[] }) {
                     <Separator className="my-4" />
                     <div className="relative">
                       <ScrollArea>
-                      <div className="grid md:grid-cols-3 grid-cols-1 gap-4 pb-4">
+                        <div className="grid md:grid-cols-3 grid-cols-1 gap-4 pb-4">
                           {items.map((company, i) => (
                             <CompanyMainMarketplace
                               key={i}
                               listings={company}
-                             
                             />
                           ))}
                         </div>
