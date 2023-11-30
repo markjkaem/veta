@@ -71,7 +71,6 @@ export function CompanyListingForm() {
     mode: "onChange",
   });
 
-
   const createBlobFile = async (file: File) => {
     const response = await fetch(`/api/avatar/upload?filename=${file?.name}`, {
       method: "POST",
@@ -81,7 +80,7 @@ export function CompanyListingForm() {
     const newBlob = (await response.json()) as PutBlobResult;
     return newBlob;
   };
-  
+
   const { fields, append } = useFieldArray({
     name: "tasks",
     control: form.control,
@@ -89,8 +88,8 @@ export function CompanyListingForm() {
 
   async function onSubmit(data: ProfileFormValues) {
     //@ts-ignore
-    if(!inputFileRef.current?.files[0]){
-      throw new Error("No file was seleced")
+    if (!inputFileRef.current?.files[0]) {
+      throw new Error("No file was seleced");
     }
 
     const file = inputFileRef.current.files[0];
@@ -102,7 +101,7 @@ export function CompanyListingForm() {
         description: data.description,
         briefing: data.briefing,
         email: session.data?.user?.email as string,
-        banner: newBlob.url as string
+        banner: newBlob.url as string,
       })
       .returning();
 
@@ -120,7 +119,7 @@ export function CompanyListingForm() {
     toast({
       title: "Your listing was succesfully created.",
     });
-  router.refresh()
+    router.refresh();
   }
 
   return (
@@ -128,8 +127,10 @@ export function CompanyListingForm() {
       <div className="space-y-2 mt-4 md:w-8/12 w-11/12">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-       <p className="text-sm text-muted-foreground text-black font-semibold dark:text-gray-300">Banner</p>
-          <input  required name="file" ref={inputFileRef} type="file" />
+            <p className="text-sm text-muted-foreground text-black font-semibold dark:text-gray-300">
+              Banner
+            </p>
+            <input required name="file" ref={inputFileRef} type="file" />
             <FormField
               control={form.control}
               name="title"
@@ -264,7 +265,7 @@ export function CompanyListingForm() {
               Add Task
             </Button>
             <div></div>
-            <Button type="submit">Update profile</Button>
+            <Button type="submit">Create listing</Button>
           </form>
         </Form>
       </div>
