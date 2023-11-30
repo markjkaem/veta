@@ -17,6 +17,7 @@ const getListings = async () => {
   return response;
 };
 
+
 const getProfile = async () => {
   const session = await getServerSession();
   const response = await db
