@@ -1,10 +1,7 @@
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
-import {
-  ContextMenu,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu";
+import { ContextMenu, ContextMenuTrigger } from "@/components/ui/context-menu";
 
 import Link from "next/link";
 import db from "../../../drizzle/db";
@@ -12,8 +9,6 @@ import { listingsTasks } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { Listings } from "../types/Listings";
 import DetailsDropdown from "../details-dropdown";
-
-
 
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   listings: Listings;
@@ -53,8 +48,7 @@ export async function MyListings({
                   width={800}
                   height={800}
                   className={cn(
-                    " w-full h-40 object-cover transition-all hover:scale-105",
-
+                    " w-full h-40 object-cover transition-all hover:scale-105"
                   )}
                 />
               </Link>
@@ -66,7 +60,7 @@ export async function MyListings({
                   width={800}
                   height={800}
                   className={cn(
-                    " w-full h-40 object-cover transition-all hover:scale-105",
+                    " w-full h-40 object-cover transition-all hover:scale-105"
                   )}
                 />
               </Link>
@@ -79,7 +73,7 @@ export async function MyListings({
                     return (
                       <Image
                         key={index}
-                        className="w-10 h-10 border-1 border-white bg-white p-0.5 rounded-full dark:border-gray-800"
+                        className="w-10 h-10 border-0.5 border-white bg-black p-0.5 rounded-full dark:border-gray-800"
                         src={`/platforms/${item.platform}.png`}
                         alt="platform"
                         height={200}

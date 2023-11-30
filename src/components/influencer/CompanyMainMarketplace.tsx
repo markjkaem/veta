@@ -1,13 +1,10 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import {
-  ContextMenu,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu";
+import { ContextMenu, ContextMenuTrigger } from "@/components/ui/context-menu";
 
 import Link from "next/link";
 import db from "../../../drizzle/db";
-import {  listingsTasks } from "../../../drizzle/schema";
+import { listingsTasks } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { Listings } from "../types/Listings";
 
@@ -17,7 +14,6 @@ interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   width?: number;
   height?: number;
 }
-
 
 const getListingTasks = async (id: string) => {
   const response = await db
@@ -46,22 +42,21 @@ export async function CompanyMainMarketplace({
                   width={800}
                   height={800}
                   className={cn(
-                    " w-full h-40 object-cover transition-all hover:scale-105",
-                    
+                    " w-full h-40 object-cover transition-all hover:scale-105"
                   )}
                 />
               </Link>
             ) : (
               <Link href={`/dashboard/campaigns/listings/${listings.id}`}>
-                 <Image
+                <Image
                   src={"/veta-template.jpg"}
                   alt={listings.title as string}
                   width={800}
                   height={800}
                   className={cn(
-                    " w-full h-40 object-cover transition-all hover:scale-105",
+                    " w-full h-40 object-cover transition-all hover:scale-105"
                   )}
-                />  
+                />
               </Link>
             )}
             <div className="absolute z-10 bottom-20 space-y-1 text-sm">
@@ -72,7 +67,7 @@ export async function CompanyMainMarketplace({
                     return (
                       <Image
                         key={index}
-                        className="w-10 h-10 border-2 border-white bg-white p-1 rounded-full dark:border-gray-800"
+                        className="w-10 h-10 border-2 border-white bg-black p-0.5 rounded-full dark:border-gray-800"
                         src={`/platforms/${item.platform}.png`}
                         alt=""
                         width={200}
