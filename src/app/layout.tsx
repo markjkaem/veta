@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/components/providers";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,9 +29,11 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {children}
+          
             <Toaster />
           </ThemeProvider>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
