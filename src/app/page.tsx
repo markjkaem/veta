@@ -1,10 +1,10 @@
 import Companies from "@/components/companies";
 import Header from "@/components/header";
-import Pricing from "@/components/pricing";
-import Services from "@/components/services";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  redirect("/sign-in");
   return (
     <main className="flex flex-col justify-center items-center">
       <div>
