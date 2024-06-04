@@ -20,7 +20,7 @@ export const getCurrentSubscription = async (email: string) => {
     }
   
     const stripe = new Stripe(
-      "***REMOVED***",
+      "sk_test_51L34nrJ0Tu9paWkW9sF0gCPGB55l3fncgRlFJmF2Lcr4xEUdCMuUtQnYang1GsxdZAmw9AaTC6vHgJHPhNMAsDDA000WqYNd73",
       {
         apiVersion: "2023-10-16",
       }

@@ -18,8 +18,8 @@ const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
     providers: [
         Google({
-          clientId: "941869449468-fg0idtb5u80n8me39u864c9uuhulcbgf.apps.googleusercontent.com",
-          clientSecret: "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"
+          clientId: "1055541956168-np0vmf640m77cchibdhjp06olm0502s8.apps.googleusercontent.com",
+          clientSecret: "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"
         })
       ]
 })
