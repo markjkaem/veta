@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 function SignupButtons() {
   return (
     <>
-      <div className="grid-grid-cols-1 grid w-4/6 mx-auto  gap-2 md:grid-cols-2 md:gap-4">
+      <div className="grid-grid-cols-1 grid w-5/6 mx-auto  gap-2 md:grid-cols-2 md:gap-4">
         <button
           onClick={() => signIn("google")}
           className=" focus:ring-[#4285F4]/55 mr-2 inline-flex h-10 w-48 items-center rounded-lg bg-[#4285F4] px-5 py-2.5 text-center text-xs font-medium text-white hover:bg-[#4285F4]/90 focus:outline-none focus:ring-4 focus:ring-[#4285F4]/50"
